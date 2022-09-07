@@ -1,0 +1,11 @@
+[
+    {"chainId": 1, "chainName": "mainnet", "shortName": "mainnet"},
+    {"chainId": 10, "chainName": "optimism-mainnet", "shortName": "optimism"},
+    {"chainId": 56, "chainName": "binance-mainnet", "shortName": "binance"},
+    {"chainId": 100, "chainName": "gnosis-mainnet", "shortName": "gnosis"},
+    {"chainId": 137, "chainName": "polygon-mainnet", "shortName": "polygon"},
+    {"chainId": 250, "chainName": "fantom-mainnet", "shortName": "fantom"},
+    {"chainId": 288, "chainName": "boba-mainnet", "shortName": "boba"},
+    {"chainId": 42161, "chainName": "arbitrum-mainnet", "shortName": "arbitrum"},
+    {"chainId": 43114, "chainName": "avalance-c-mainnet", "shortName": "avalanche"}
+]
