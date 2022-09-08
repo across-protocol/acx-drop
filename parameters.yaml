@@ -1,0 +1,60 @@
+# Nodes that can be used to request data
+rpc_node:
+  mainnet: "https://mainnet.infura.io/v3/iL0veACXtok3nsThAnkY0u"
+  optimism: "https://optimism-mainnet.infura.io/v3/iL0veACXtok3nsThAnkY0u"
+  polygon: "https://polygon-mainnet.infura.io/v3/iL0veACXtok3nsThAnkY0u"
+  boba: "https://lightning-replica.boba.network"
+  arbitrum: "https://arbitrum-mainnet.infura.io/v3/iL0veACXtok3nsThAnkY0u"
+
+# `bridgoor` parameters correspond to specifications on how bridge users
+# are included in the airdrop
+bridgoor:
+  # v1 blocks for bridge users will probably start at
+  # same block as LP but end later
+  v1_start_block: 0
+  v1_end_block: 0
+  # v2 blocks for bridge users will probably start at
+  # same block as LP but end later
+  v2_start_block: 0
+  v2_end_block: 0
+
+  # Shared parameters
+  parameters:
+    # min bridge size (in USD) to be included in the airdrop
+    usd_cutoff: 250.0
+    # Total rewards shared between bridgoors
+    total_rewards: 15_000_000
+
+# `lp` parameters correspond to specifications on how liquidity providers
+# are included in the airdrop
+lp:
+  #
+  # v1
+  #
+
+  # v1 start block picked by the v1 launch on 2021-11-08T14:00+00:00
+  v1_start_block: 13576190
+  # v1 end block picked by the v2 launch on 2022-05-24T14:00+00:00
+  v1_end_block: 14836162
+  v1_pools:
+    DAI: "0x43f133FE6fDFA17c417695c476447dc2a449Ba5B"
+    USDC: "0x256C8919CE1AB0e33974CF6AA9c71561Ef3017b6"
+    WBTC: "0x02fbb64517E1c6ED69a6FAa3ABf37Db0482f1152"
+    WETH: "0x7355Efc63Ae731f584380a9838292c7046c1e433"
+
+  #
+  # v2
+  #
+
+  # v2 launch block picked by the v2 launch on 2022-05-24T14:00+00:00
+  v2_start_block: 14836162
+  # v2 end block is (for now) arbitrarily specified on 2022-09-07T00:00+00:00
+  v2_end_block: 15487072
+  v2_pools:
+    hub: "0xc186fA914353c44b2E33eBE05f21846F1048bEda"
+    tokens: ["DAI", "USDC", "WBTC", "WETH"]
+
+  # Shared parameters
+  parameters:
+    # Total rewards shared between LPs
+    total_rewards: 65_000_000
