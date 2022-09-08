@@ -55,7 +55,7 @@ def findEvents(w3, event, startBlock, endBlock, blockStep, argFilters, v=False):
         eventOccurrences = event.getLogs(
             fromBlock=bs, toBlock=be, argument_filters=argFilters
         )
-        nOccurrences = len(eventOcurrences)
+        nOccurrences = len(eventOccurrences)
 
         if v:
             print(f"Blocks {bs} to {be} contained {nOccurrences} transactions")
