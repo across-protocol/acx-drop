@@ -36,9 +36,9 @@ def findEvents(w3, event, startBlock, endBlock, blockStep, argFilters, v=False):
         A list of dictionaries that contain the event information
     """
     # Make sure block arguments are meaningful... i.e. >0 and an integer
-    assert((startBlock >= 0) and isinstance(startBlock, int))
-    assert((endBlock > 0) and isinstance(endBlock, int))
-    assert((blockStep > 0) and isinstance(blockStep, int))
+    assert(isinstance(startBlock, int) and startBlock >= 0)
+    assert(isinstance(endBlock, int) and endBlock > 0)
+    assert(isinstance(blockStep, int) and blockStep > 0)
     assert(startBlock < endBlock)
 
     events = []
