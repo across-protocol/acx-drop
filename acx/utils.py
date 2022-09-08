@@ -55,12 +55,12 @@ def findEvents(w3, event, startBlock, endBlock, blockStep, argFilters, v=False):
         eventOccurrences = event.getLogs(
             fromBlock=bs, toBlock=be, argument_filters=argFilters
         )
-        nOcurrences = len(eventOcurrences)
+        nOccurrences = len(eventOcurrences)
 
         if v:
-            print(f"Blocks {bs} to {be} contained {nOcurrences} transactions")
+            print(f"Blocks {bs} to {be} contained {nOccurrences} transactions")
 
-        if nOcurrences > 0:
+        if nOccurrences > 0:
             # Convert everything to JSON readable
             eventOccurrences = [
                 json.loads(w3.toJSON(x)) for x in eventOccurrences
