@@ -57,9 +57,12 @@ if __name__ == "__main__":
     v2EndBlock = params["lp"]["v2_end_block"]
     v2NBlocks = params["lp"]["v2_n_blocks"]
 
-    hub = w3.eth.contract(address=params["lp"]["v2_pools"]["hub"], abi=HUBPOOL_ABI)
+    hub = w3.eth.contract(
+        address=params["lp"]["v2_pools"]["hub"], abi=getABI("HubPool")
+    )
     addresses = [
-        SYMBOL_TO_CHAIN_TO_ADDRESS[token][1] for token in params["lp"]["v2_pools"]["tokens"]
+        SYMBOL_TO_CHAIN_TO_ADDRESS[token][1]
+        for token in params["lp"]["v2_pools"]["tokens"]
     ]
 
     for event in [hub.events.LiquidityAdded, hub.events.LiquidityRemoved]:
