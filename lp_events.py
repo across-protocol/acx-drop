@@ -4,7 +4,7 @@ import pandas as pd
 import web3
 import yaml
 
-from acx.abis import BRIDGEPOOL_ABI, HUBPOOL_ABI
+from acx.abis import getABI
 from acx.data.tokens import SYMBOL_TO_CHAIN_TO_ADDRESS
 from acx.utils import findEvents
 
@@ -26,22 +26,23 @@ if __name__ == "__main__":
     # -------------------------------------
     v1StartBlock = params["lp"]["v1_start_block"]
     v1EndBlock = params["lp"]["v1_end_block"]
+    v1NBlocks = params["lp"]["v1_n_blocks"]
 
     v1LiqAdded = {}
     v1LiqRemoved = {}
     for (token, poolAddress) in params["lp"]["v1_pools"].items():
-        pool = w3.eth.contract(address=poolAddress, abi=BRIDGEPOOL_ABI)
+        pool = w3.eth.contract(address=poolAddress, abi=getABI("BridgePool"))
 
         # Liquidity Added events
         v1LiqAdded[token] = findEvents(
             w3, pool.events.LiquidityAdded, v1StartBlock, v1EndBlock,
-            500_000, {}, True
+            v1NBlocks, {}, True
         )
 
         # Liquidity Removed events
         v1LiqRemoved[token] = findEvents(
             w3, pool.events.LiquidityRemoved, v1StartBlock, v1EndBlock,
-            500_000, {}, True
+            v1NBlocks, {}, True
         )
 
     with open("raw/v1LiquidityAdded.json", "w") as f:
@@ -54,23 +55,21 @@ if __name__ == "__main__":
     # -------------------------------------
     v2StartBlock = params["lp"]["v2_start_block"]
     v2EndBlock = params["lp"]["v2_end_block"]
+    v2NBlocks = params["lp"]["v2_n_blocks"]
 
     hub = w3.eth.contract(address=params["lp"]["v2_pools"]["hub"], abi=HUBPOOL_ABI)
     addresses = [
         SYMBOL_TO_CHAIN_TO_ADDRESS[token][1] for token in params["lp"]["v2_pools"]["tokens"]
     ]
 
-    v2LiqAdded = findEvents(
-        w3, hub.events.LiquidityAdded, v2StartBlock, v2EndBlock,
-        500_000, {"l1Token": addresses}, True
-    )
-    v2LiqRemoved = findEvents(
-        w3, hub.events.LiquidityRemoved, v2StartBlock, v2EndBlock,
-        500_000, {"l1Token": addresses}, True
-    )
+    for event in [hub.events.LiquidityAdded, hub.events.LiquidityRemoved]:
+        # Get event name
+        eventName = event.event_name
 
-    with open("raw/v2LiquidityAdded.json", "w") as f:
-        json.dump(v2LiqAdded, f)
+        events = findEvents(
+            w3, event, v2StartBlock, v2EndBlock,
+            v2NBlocks, {"l1Token": addresses}, True
+        )
 
-    with open("raw/v2LiquidityRemoved.json", "w") as f:
-        json.dump(v2LiqRemoved, f)
+        with open(f"raw/v2{eventName}.json", "w") as f:
+            json.dump(events, f)

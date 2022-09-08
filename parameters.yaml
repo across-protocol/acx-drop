@@ -36,6 +36,9 @@ lp:
   v1_start_block: 13576190
   # v1 end block picked by the v2 launch on 2022-05-24T14:00+00:00
   v1_end_block: 14836162
+  # Number of blocks to request at a time for v1
+  v1_n_blocks: 500_000
+
   v1_pools:
     DAI: "0x43f133FE6fDFA17c417695c476447dc2a449Ba5B"
     USDC: "0x256C8919CE1AB0e33974CF6AA9c71561Ef3017b6"
@@ -50,6 +53,9 @@ lp:
   v2_start_block: 14836162
   # v2 end block is (for now) arbitrarily specified on 2022-09-07T00:00+00:00
   v2_end_block: 15487072
+  # Number of blocks to request at a time for v1
+  v2_n_blocks: 500_000
+
   v2_pools:
     hub: "0xc186fA914353c44b2E33eBE05f21846F1048bEda"
     tokens: ["DAI", "USDC", "WBTC", "WETH"]
