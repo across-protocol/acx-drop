@@ -39,7 +39,7 @@ def findEvents(w3, event, startBlock, endBlock, blockStep, argFilters, v=False):
     assert((startBlock >= 0) and isinstance(startBlock, int))
     assert((endBlock > 0) and isinstance(endBlock, int))
     assert((blockStep > 0) and isinstance(blockStep, int))
-    assert(startBlock > endBlock)
+    assert(startBlock < endBlock)
 
     events = []
     blockStarts = range(startBlock, endBlock, blockStep)
