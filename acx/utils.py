@@ -35,28 +35,38 @@ def findEvents(w3, event, startBlock, endBlock, blockStep, argFilters, v=False):
     events : list(dict)
         A list of dictionaries that contain the event information
     """
+    # Make sure block arguments are meaningful... i.e. >0 and an integer
+    assert((startBlock >= 0) and isinstance(startBlock, int))
+    assert((endBlock > 0) and isinstance(endBlock, int))
+    assert((blockStep > 0) and isinstance(blockStep, int))
+    assert(startBlock > endBlock)
+
     events = []
     blockStarts = range(startBlock, endBlock, blockStep)
-
     for bs in blockStarts:
         be = min(bs + blockStep - 1, endBlock)
 
         if v:
-            print(f"Beginning block {bs}")
-            print(f"Ending block {be}")
+            print(
+                f"Beginning block {bs}\n"
+                f"Ending block {be}"
+            )
 
-        event_occurrences = []
-        event_occurrences = event.getLogs(
+        eventOccurrences = event.getLogs(
             fromBlock=bs, toBlock=be, argument_filters=argFilters
         )
-        if v:
-            print(f"Blocks {bs} to {be} contained {len(event_occurrences)} transactions")
+        nOcurrences = len(eventOcurrences)
 
-        # Convert everything to JSON readable
-        event_occurrences = [
-            json.loads(w3.toJSON(x)) for x in event_occurrences
-        ]
-        events.extend(event_occurrences)
+        if v:
+            print(f"Blocks {bs} to {be} contained {nOcurrences} transactions")
+
+        if nOcurrences > 0:
+            # Convert everything to JSON readable
+            eventOccurrences = [
+                json.loads(w3.toJSON(x)) for x in eventOccurrences
+            ]
+
+            events.extend(eventOccurrences)
 
     return events
 
