@@ -13,6 +13,7 @@ if __name__ == "__main__":
     # Load parameters
     with open("parameters.yaml", "r") as f:
         params = yaml.load(f, yaml.Loader)
+    nBlocks = params["lp"]["n_blocks"]
 
     # Connect to RPC node
     provider = web3.Web3.HTTPProvider(
@@ -24,25 +25,33 @@ if __name__ == "__main__":
     # -------------------------------------
     # V1 Liquidity Add/Remove
     # -------------------------------------
-    v1StartBlock = params["lp"]["v1_start_block"]
     v1EndBlock = params["lp"]["v1_end_block"]
-    v1NBlocks = params["lp"]["v1_n_blocks"]
 
     v1LiqAdded = {}
     v1LiqRemoved = {}
-    for (token, poolAddress) in params["lp"]["v1_pools"].items():
+    for token in params["lp"]["v1_pools"]["tokens"]:
+        # Get information about specific BridgePool
+        # NOTE: We have to start with `bridgeInfo["first_block"]` because
+        #       we need to track liquidity deposits/removals that occurred
+        #       prior to the first block we track for...
+        bridgeInfo = params["across"]["v1"]["mainnet"]["bridge"][token]
+        poolAddress = bridgeInfo["address"]
+        firstBlock = bridgeInfo["first_block"]
+        v1EndBlock = params["lp"]["v1_end_block"]
+
+        # Create BridgePool object
         pool = w3.eth.contract(address=poolAddress, abi=getABI("BridgePool"))
 
         # Liquidity Added events
         v1LiqAdded[token] = findEvents(
-            w3, pool.events.LiquidityAdded, v1StartBlock, v1EndBlock,
-            v1NBlocks, {}, True
+            w3, pool.events.LiquidityAdded, firstBlock, v1EndBlock,
+            nBlocks, {}, True
         )
 
         # Liquidity Removed events
         v1LiqRemoved[token] = findEvents(
-            w3, pool.events.LiquidityRemoved, v1StartBlock, v1EndBlock,
-            v1NBlocks, {}, True
+            w3, pool.events.LiquidityRemoved, firstBlock, v1EndBlock,
+            nBlocks, {}, True
         )
 
     with open("raw/v1LiquidityAdded.json", "w") as f:
@@ -53,13 +62,11 @@ if __name__ == "__main__":
     # -------------------------------------
     # V2 Liquidity Add/Remove
     # -------------------------------------
-    v2StartBlock = params["lp"]["v2_start_block"]
+    hubInfo = params["across"]["v2"]["mainnet"]["hub"]
+    v2StartBlock = hubInfo["first_block"]
     v2EndBlock = params["lp"]["v2_end_block"]
-    v2NBlocks = params["lp"]["v2_n_blocks"]
 
-    hub = w3.eth.contract(
-        address=params["lp"]["v2_pools"]["hub"], abi=getABI("HubPool")
-    )
+    hub = w3.eth.contract(address=hubInfo["address"], abi=getABI("HubPool"))
     addresses = [
         SYMBOL_TO_CHAIN_TO_ADDRESS[token][1]
         for token in params["lp"]["v2_pools"]["tokens"]
@@ -71,7 +78,7 @@ if __name__ == "__main__":
 
         events = findEvents(
             w3, event, v2StartBlock, v2EndBlock,
-            v2NBlocks, {"l1Token": addresses}, True
+            nBlocks, {"l1Token": addresses}, True
         )
 
         with open(f"raw/v2{eventName}.json", "w") as f:
