@@ -2,6 +2,34 @@ import json
 
 import web3
 
+from typing import Any, Dict, Union
+
+from eth_typing import HexStr
+from hexbytes import HexBytes
+from web3.datastructures import AttributeDict
+from web3._utils.encoding import FriendlyJsonSerde
+
+
+class Web3JsonEncoder(json.JSONEncoder):
+    "Based on https://github.com/ethereum/web3.py/blob/master/web3/_utils/encoding.py#L286-L292"
+    def default(self, obj: Any) -> Union[Dict[Any, Any], HexStr]:
+        if isinstance(obj, AttributeDict):
+            return {k: v for k, v in obj.items()}
+        if isinstance(obj, HexBytes):
+            return HexStr(obj.hex())
+        # If any of the args are bytes, just convert them to hex... Pray
+        # to the blockchain gods that this is what it's meant to be
+        if isinstance(obj, bytes):
+            return obj.hex()
+        return json.JSONEncoder.default(self, obj)
+
+
+def to_json(obj: Dict[Any, Any]) -> str:
+    """
+    Convert a complex object (like a transaction object) to a JSON string
+    """
+    return FriendlyJsonSerde().json_encode(obj, cls=Web3JsonEncoder)
+
 
 def findEvents(w3, event, startBlock, endBlock, blockStep, argFilters, v=False):
     """
@@ -63,7 +91,7 @@ def findEvents(w3, event, startBlock, endBlock, blockStep, argFilters, v=False):
         if nOccurrences > 0:
             # Convert everything to JSON readable
             eventOccurrences = [
-                json.loads(w3.toJSON(x)) for x in eventOccurrences
+                json.loads(to_json(x)) for x in eventOccurrences
             ]
 
             events.extend(eventOccurrences)
@@ -71,6 +99,11 @@ def findEvents(w3, event, startBlock, endBlock, blockStep, argFilters, v=False):
     return events
 
 
+def scaleDecimals(x, decimals=18):
+    return  x / 10**decimals
+
+
 def createNewSubsetDict(newKey, newValue, d):
     return {x[newKey]: x[newValue] for x in d}
+
 
