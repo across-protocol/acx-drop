@@ -6,6 +6,61 @@ rpc_node:
   boba: "https://lightning-replica.boba.network"
   arbitrum: "https://arbitrum-mainnet.infura.io/v3/iL0veACXtok3nsThAnkY0u"
 
+# `across` parameters contain certain pieces of information that are useful
+# to reference in multiple places
+across:
+  v1:
+    mainnet:
+      bridge:
+        DAI:
+          address: "0x43f133FE6fDFA17c417695c476447dc2a449Ba5B"
+          first_block: 14302709
+        USDC:
+          address: "0x256C8919CE1AB0e33974CF6AA9c71561Ef3017b6"
+          first_block: 13545487
+        WBTC:
+          address: "0x02fbb64517E1c6ED69a6FAa3ABf37Db0482f1152"
+          first_block: 13996048
+        WETH:
+          address: "0x7355Efc63Ae731f584380a9838292c7046c1e433"
+          first_block: 13545377
+    optimism:
+      deposit_box:
+        address: "0x3baD7AD0728f9917d1Bf08af5782dCbD516cDd96"
+        first_block: 204576
+    boba:
+      deposit_box:
+        address: "0xCD43CEa89DF8fE39031C03c24BC24480e942470B"
+        first_block: 223808
+    arbitrum:
+      deposit_box:
+        address: "0xD8c6dD978a3768F7DDfE3A9aAD2c3Fd75Fa9B6Fd"
+        first_block: 2811998
+  v2:
+    mainnet:
+      hub:
+        address: "0xc186fA914353c44b2E33eBE05f21846F1048bEda"
+        first_block: 14819537
+      spoke:
+        address: "0x4D9079Bb4165aeb4084c526a32695dCfd2F77381"
+        first_block: 14819486
+    optimism:
+      spoke:
+        address: "0xa420b2d1c0841415A695b81E5B867BCD07Dff8C9"
+        first_block: 8747136
+    polygon:
+      spoke:
+        address: "0x69B5c72837769eF1e7C164Abc6515DcFf217F920"
+        first_block: 28604263
+    boba:
+      spoke:
+        address: "0xBbc6009fEfFc27ce705322832Cb2068F8C1e0A58"
+        first_block: 619993
+    arbitrum:
+      spoke:
+        address: "0xB88690461dDbaB6f04Dfad7df66B7725942FEb9C"
+        first_block: 12741972
+
 # `bridgoor` parameters correspond to specifications on how bridge users
 # are included in the airdrop
 bridgoor:
@@ -28,37 +83,21 @@ bridgoor:
 # `lp` parameters correspond to specifications on how liquidity providers
 # are included in the airdrop
 lp:
-  #
-  # v1
-  #
+  # The number of blocks to request at a time for both v1/v2 liquidity events
+  n_blocks: 500_000
+
+  # LPs receive rewards for LPing for these tokens
+  tokens: ["DAI", "USDC", "WBTC", "WETH"]
 
   # v1 start block picked by the v1 launch on 2021-11-08T14:00+00:00
   v1_start_block: 13576190
   # v1 end block picked by the v2 launch on 2022-05-24T14:00+00:00
   v1_end_block: 14836162
-  # Number of blocks to request at a time for v1
-  v1_n_blocks: 500_000
-
-  v1_pools:
-    DAI: "0x43f133FE6fDFA17c417695c476447dc2a449Ba5B"
-    USDC: "0x256C8919CE1AB0e33974CF6AA9c71561Ef3017b6"
-    WBTC: "0x02fbb64517E1c6ED69a6FAa3ABf37Db0482f1152"
-    WETH: "0x7355Efc63Ae731f584380a9838292c7046c1e433"
-
-  #
-  # v2
-  #
 
   # v2 launch block picked by the v2 launch on 2022-05-24T14:00+00:00
   v2_start_block: 14836162
   # v2 end block is (for now) arbitrarily specified on 2022-09-07T00:00+00:00
   v2_end_block: 15487072
-  # Number of blocks to request at a time for v1
-  v2_n_blocks: 500_000
-
-  v2_pools:
-    hub: "0xc186fA914353c44b2E33eBE05f21846F1048bEda"
-    tokens: ["DAI", "USDC", "WBTC", "WETH"]
 
   # Shared parameters
   parameters:
