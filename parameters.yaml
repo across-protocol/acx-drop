@@ -86,21 +86,18 @@ lp:
   # The number of blocks to request at a time for both v1/v2 liquidity events
   n_blocks: 500_000
 
+  # LPs receive rewards for LPing for these tokens
+  tokens: ["DAI", "USDC", "WBTC", "WETH"]
+
   # v1 start block picked by the v1 launch on 2021-11-08T14:00+00:00
   v1_start_block: 13576190
   # v1 end block picked by the v2 launch on 2022-05-24T14:00+00:00
   v1_end_block: 14836162
 
-  v1_pools:
-    tokens: ["DAI", "USDC", "WBTC", "WETH"]
-
   # v2 launch block picked by the v2 launch on 2022-05-24T14:00+00:00
   v2_start_block: 14836162
   # v2 end block is (for now) arbitrarily specified on 2022-09-07T00:00+00:00
   v2_end_block: 15487072
-
-  v2_pools:
-    tokens: ["DAI", "USDC", "WBTC", "WETH"]
 
   # Shared parameters
   parameters:

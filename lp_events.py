@@ -29,14 +29,14 @@ if __name__ == "__main__":
 
     v1LiqAdded = {}
     v1LiqRemoved = {}
-    for token in params["lp"]["v1_pools"]["tokens"]:
+    for token in params["lp"]["tokens"]:
         # Get information about specific BridgePool
         # NOTE: We have to start with `bridgeInfo["first_block"]` because
         #       we need to track liquidity deposits/removals that occurred
         #       prior to the first block we track for...
         bridgeInfo = params["across"]["v1"]["mainnet"]["bridge"][token]
         poolAddress = bridgeInfo["address"]
-        firstBlock = bridgeInfo["first_block"]
+        v1FirstBlock = bridgeInfo["first_block"]
         v1EndBlock = params["lp"]["v1_end_block"]
 
         # Create BridgePool object
@@ -44,13 +44,13 @@ if __name__ == "__main__":
 
         # Liquidity Added events
         v1LiqAdded[token] = findEvents(
-            w3, pool.events.LiquidityAdded, firstBlock, v1EndBlock,
+            w3, pool.events.LiquidityAdded, v1FirstBlock, v1EndBlock,
             nBlocks, {}, True
         )
 
         # Liquidity Removed events
         v1LiqRemoved[token] = findEvents(
-            w3, pool.events.LiquidityRemoved, firstBlock, v1EndBlock,
+            w3, pool.events.LiquidityRemoved, v1FirstBlock, v1EndBlock,
             nBlocks, {}, True
         )
 
@@ -63,13 +63,13 @@ if __name__ == "__main__":
     # V2 Liquidity Add/Remove
     # -------------------------------------
     hubInfo = params["across"]["v2"]["mainnet"]["hub"]
-    v2StartBlock = hubInfo["first_block"]
+    v2FirstBlock = hubInfo["first_block"]
     v2EndBlock = params["lp"]["v2_end_block"]
 
     hub = w3.eth.contract(address=hubInfo["address"], abi=getABI("HubPool"))
     addresses = [
         SYMBOL_TO_CHAIN_TO_ADDRESS[token][1]
-        for token in params["lp"]["v2_pools"]["tokens"]
+        for token in params["lp"]["tokens"]
     ]
 
     for event in [hub.events.LiquidityAdded, hub.events.LiquidityRemoved]:
@@ -77,7 +77,7 @@ if __name__ == "__main__":
         eventName = event.event_name
 
         events = findEvents(
-            w3, event, v2StartBlock, v2EndBlock,
+            w3, event, v2FirstBlock, v2EndBlock,
             nBlocks, {"l1Token": addresses}, True
         )
 
