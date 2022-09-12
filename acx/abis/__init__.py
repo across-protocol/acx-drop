@@ -5,7 +5,8 @@ import pkgutil
 # Mapping of ABI names to filenames
 ABIs = {
     "BridgePool": "v1BridgePool.json",
-    "HubPool": "v2HubPool.json"
+    "HubPool": "v2HubPool.json",
+    "SpokePool": "v2SpokePool.json"
 }
 
 
