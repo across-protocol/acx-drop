@@ -1,22 +1,21 @@
 import datetime as dt
-import requests
-import time
-
 import pandas as pd
+import yaml
 
 from acx.data.tokens import SYMBOL_TO_CGID
+from acx.utils import getWithRetries
 
 
-CG_BASE_URL = "https://api.coingecko.com/api/v3/"
+CG_BASE_URL = "https://api.coingecko.com/api/v3"
 
 
 def getCoinPriceHistory(_id, startDate, endDate):
     """
     Retrieve historical data
     """
+
     # Build request url
-    _ending = f"coins/{_id}/market_chart/range"
-    req_url = CG_BASE_URL + _ending
+    req_url = f"{CG_BASE_URL}/coins/{_id}/market_chart/range"
 
     # Parameters
     params = {
@@ -24,20 +23,21 @@ def getCoinPriceHistory(_id, startDate, endDate):
         "from": startDate.timestamp(),
         "to": endDate.timestamp()
     }
-
-    time.sleep(1.5)
-    res = requests.get(req_url, params=params)
+    res = getWithRetries(req_url, params=params)
 
     return res.json()["prices"]
 
 
 if __name__ == "__main__":
+    # Load parameters
+    with open("parameters.yaml", "r") as f:
+        params = yaml.load(f, yaml.Loader)
 
     # Tokens that we want data for
-    tokens = ["DAI", "ETH", "USDC", "WBTC", "WETH"]
+    tokens = params["misc"]["price_tokens"]
 
-    startDate = dt.datetime.utcfromtimestamp(1609459200)  # 2021-01-01T00:00
-    endDate = dt.datetime.utcfromtimestamp(1662508800)  # 2022-09-08T00:00
+    startDate = dt.datetime.utcfromtimestamp(params["misc"]["price_start_ts"])
+    endDate = dt.datetime.utcfromtimestamp(params["misc"]["price_end_ts"])
 
     dfs = []
     for token in tokens:
