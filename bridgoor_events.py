@@ -82,8 +82,8 @@ if __name__ == "__main__":
         ]
 
         # Get start/end blocks for qualifying
-        v2StartBlock = params["bridgoor"]["v2_start_block"][chain]
-        v2EndBlock = params["bridgoor"]["v2_end_block"][chain]
+        v2StartBlock = params["bridgoor"]["v2_start_block"][chainId]
+        v2EndBlock = params["bridgoor"]["v2_end_block"][chainId]
 
         # Retrieve deposits
         deposits = findEvents(
