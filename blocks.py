@@ -83,9 +83,9 @@ if __name__ == "__main__":
             try:
                 block = findMostRecentBlockAfterTs(_ts, chainId, key=someScanKey)
             except:
-                # If failed block at that time (looking at you Optimism...) try 6 hours later
+                # If failed block at that time (looking at you Optimism...) try 9 hours later
                 print(f"{chain} has no block at {_ts}")
-                block = findMostRecentBlockAfterTs(_ts + 6*60*60, chainId, key=someScanKey)
+                block = findMostRecentBlockAfterTs(_ts + 9*60*60, chainId, key=someScanKey)
             row = {
                 "chain": chain,
                 "chainId": chainId,
