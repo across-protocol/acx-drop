@@ -45,7 +45,8 @@ def unpackV1Relays(v1RelaysRaw, disputes):
                 "sender": depositData[3],
                 "recipient": depositData[2],
                 "symbol": token,
-                "amount": scaleDecimals(depositData[4], decimals)
+                "amount": scaleDecimals(depositData[4], decimals),
+                "version": 1
             }
             out.append(row)
 
@@ -72,7 +73,8 @@ def unpackV2Deposits(v2DepositsRaw):
             "sender": args["depositor"],
             "recipient": args["recipient"],
             "symbol": symbol,
-            "amount": scaleDecimals(args["amount"], decimals)
+            "amount": scaleDecimals(args["amount"], decimals),
+            "version": 2
         }
         out.append(row)
 
