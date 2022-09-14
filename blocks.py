@@ -46,11 +46,12 @@ def findMostRecentBlockAfterTs(ts: int, chainId: int=1, key=""):
         "timestamp": ts,
         "apikey": key
     }
-    res = getWithRetries(apiurl, params=params, backoffFactor=1.5)
+    res = getWithRetries(apiurl, params=params, backoffFactor=1.5, preSleep=0.5)
 
     if res.json()["status"] == "1":
         return int(res.json()["result"])
     else:
+        print(res.json())
         raise ValueError("Failed to find block")
 
 
