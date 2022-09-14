@@ -59,11 +59,12 @@ if __name__ == "__main__":
 
     hub = w3.eth.contract(address=hubInfo["address"], abi=getABI("HubPool"))
 
+    v2Transfers = {}
     for token in params["lp"]["tokens"]:
         lpTokenAddress = hub.functions.pooledTokens(SYMBOL_TO_CHAIN_TO_ADDRESS[token][1]).call()[0]
         lpToken = w3.eth.contract(address=lpTokenAddress, abi=getABI("ERC20"))
 
-        events = findEvents(
+        v2Transfers[token] = findEvents(
             w3, lpToken.events.Transfer, v2FirstBlock, v2EndBlock,
             nBlocks, {}, True
         )
