@@ -14,10 +14,7 @@ def processTransfers(lpTransfers, version=1):
     """
     out = []
     for token in lpTransfers.keys():
-        if version == 1:
-            decimals = 18
-        elif version == 2:
-            decimals = SYMBOL_TO_DECIMALS[token]
+        decimals = SYMBOL_TO_DECIMALS[token]
 
         for transfer in lpTransfers[token]:
             args = transfer["args"]
