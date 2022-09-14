@@ -2,7 +2,7 @@ import datetime as dt
 import json
 import time
 
-import yaml
+from pyaml_env import parse_config
 
 from acx.data.chains import SHORTNAME_TO_ID
 from acx.utils import getWithRetries
@@ -57,8 +57,7 @@ def findMostRecentBlockAfterTs(ts: int, chainId: int=1, key=""):
 
 if __name__ == "__main__":
     # Load parameters
-    with open("parameters.yaml", "r") as f:
-        params = yaml.load(f, yaml.Loader)
+    params = parse_config("parameters.yaml")
 
     # Find relevant blocks for all chains
     blockData = []
@@ -80,8 +79,18 @@ if __name__ == "__main__":
         # Get the block number for each day between (blockStartTs, blockEndTs)
         dateStarts = range(blockStartTs, blockEndTs, 24*60*60)
         for _ts in dateStarts:
-            if (_ts == 1654128000) and (chain == "optimism"):
+            # Optimism - June 1, 2022
+            if (_ts == 1654041600) and (chain == "optimism"):
+                block = 9621060
+            # Optimism June 2, 2022
+            elif (_ts == 1654128000) and (chain == "optimism"):
                 block = 10108895
+            # Optimism - August 6, 2022
+            elif (_ts == 1659744000) and (chain == "optimism"):
+                block = 17974360
+            # Boba - March 6, 2022
+            elif (_ts == 1646524800) and (chain == "boba"):
+                block = 382645
             else:
                 block = findMostRecentBlockAfterTs(_ts, chainId, key=someScanKey)
 
