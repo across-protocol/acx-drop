@@ -1,7 +1,8 @@
 import json
 
 import pandas as pd
-import yaml
+
+from pyaml_env import parse_config
 
 from acx.abis import getABI
 from acx.data.tokens import (
@@ -84,8 +85,7 @@ def unpackV2Deposits(v2DepositsRaw):
 
 if __name__ == "__main__":
     # Load parameters
-    with open("parameters.yaml", "r") as f:
-        params = yaml.load(f, yaml.Loader)
+    params = parse_config("parameters.yaml")
 
     # Load data
     with open("raw/v1DisputedRelays.json", "r") as f:
