@@ -27,8 +27,7 @@ if __name__ == "__main__":
     # -------------------------------------
     v1EndBlock = params["lp"]["v1_end_block"]
 
-    v1LiqAdded = {}
-    v1LiqRemoved = {}
+    v1Transfers = {}
     for token in params["lp"]["tokens"]:
         # Get information about specific BridgePool
         # NOTE: We have to start with `bridgeInfo["first_block"]` because
@@ -42,22 +41,14 @@ if __name__ == "__main__":
         # Create BridgePool object
         pool = w3.eth.contract(address=poolAddress, abi=getABI("BridgePool"))
 
-        # Liquidity Added events
-        v1LiqAdded[token] = findEvents(
-            w3, pool.events.LiquidityAdded, v1FirstBlock, v1EndBlock,
+        # Track transfer events
+        v1Transfers[token] = findEvents(
+            w3, pool.events.Transfer, v1FirstBlock, v1EndBlock,
             nBlocks, {}, True
         )
 
-        # Liquidity Removed events
-        v1LiqRemoved[token] = findEvents(
-            w3, pool.events.LiquidityRemoved, v1FirstBlock, v1EndBlock,
-            nBlocks, {}, True
-        )
-
-    with open("raw/v1LiquidityAdded.json", "w") as f:
-        json.dump(v1LiqAdded, f)
-    with open("raw/v1LiquidityRemoved.json", "w") as f:
-        json.dump(v1LiqRemoved, f)
+    with open("raw/v1Transfers.json", "w") as f:
+        json.dump(v1Transfers, f)
 
     # -------------------------------------
     # V2 Liquidity Add/Remove
@@ -67,19 +58,15 @@ if __name__ == "__main__":
     v2EndBlock = params["lp"]["v2_end_block"]
 
     hub = w3.eth.contract(address=hubInfo["address"], abi=getABI("HubPool"))
-    addresses = [
-        SYMBOL_TO_CHAIN_TO_ADDRESS[token][1]
-        for token in params["lp"]["tokens"]
-    ]
 
-    for event in [hub.events.LiquidityAdded, hub.events.LiquidityRemoved]:
-        # Get event name
-        eventName = event.event_name
+    for token in params["lp"]["tokens"]:
+        lpTokenAddress = hub.functions.pooledTokens(SYMBOL_TO_CHAIN_TO_ADDRESS[token][1]).call()[0]
+        lpToken = w3.eth.contract(address=lpTokenAddress, abi=getABI("ERC20"))
 
         events = findEvents(
-            w3, event, v2FirstBlock, v2EndBlock,
-            nBlocks, {"l1Token": addresses}, True
+            w3, lpToken.events.Transfer, v2FirstBlock, v2EndBlock,
+            nBlocks, {}, True
         )
 
-        with open(f"raw/v2{eventName}.json", "w") as f:
+        with open(f"raw/v2Transfers.json", "w") as f:
             json.dump(events, f)
