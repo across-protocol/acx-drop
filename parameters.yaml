@@ -1,3 +1,10 @@
+etherscan_keys:
+  mainnet: "ETHERSCANKEY"
+  optimism: "OPTIMISTICETHERSCANKEY"
+  polygon: "POLYGONSCANKEY"
+  boba: "BOBASCANKEY"
+  arbitrum: "ARBISCANKEY"
+
 # Nodes that can be used to request data
 rpc_node:
   mainnet: "https://mainnet.infura.io/v3/iL0veACXtok3nsThAnkY0u"
