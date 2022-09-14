@@ -79,13 +79,11 @@ if __name__ == "__main__":
         # Get the block number for each day between (blockStartTs, blockEndTs)
         dateStarts = range(blockStartTs, blockEndTs, 24*60*60)
         for _ts in dateStarts:
-            time.sleep(0.5)
-            try:
+            if (_ts == 1654128000) and (chain == "optimism"):
+                block = 10108895
+            else:
                 block = findMostRecentBlockAfterTs(_ts, chainId, key=someScanKey)
-            except:
-                # If failed block at that time (looking at you Optimism...) try 9 hours later
-                print(f"{chain} has no block at {_ts}")
-                block = findMostRecentBlockAfterTs(_ts + 9*60*60, chainId, key=someScanKey)
+
             row = {
                 "chain": chain,
                 "chainId": chainId,
