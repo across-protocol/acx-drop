@@ -1,50 +1,46 @@
 import json
 
-import numpy as np
 import pandas as pd
-import web3
-import yaml
 
-from acx.data.tokens import SYMBOL_TO_DECIMALS, CHAIN_TO_ADDRESS_TO_SYMBOL
+from pyaml_env import parse_config
+
+from acx.data.tokens import SYMBOL_TO_DECIMALS
 from acx.utils import scaleDecimals
 
 
-def processTransfers(lpTransfers):
+def processTransfers(lpTransfers, version=1):
     """
     Helper to process transfers and store in an LP friendly format
     """
     out = []
     for token in lpTransfers.keys():
+        if version == 1:
+            decimals = 18
+        elif version == 2:
+            decimals = SYMBOL_TO_DECIMALS[token]
+
         for transfer in lpTransfers[token]:
             args = transfer["args"]
 
-            # Person that transfer is to is increasing their LP position
-            rowTo = {
-                "block": transfer["blockNumber"],
-                "tx": transfer["transactionHash"],
-                "lp": args["to"],
-                "symbol": token,
-                "amount": scaleDecimals(args["value"], 18),
-            }
-            out.append(rowTo)
-
-            # Person that transfer is from is decreasing their LP position
-            rowFrom = {
-                "block": transfer["blockNumber"],
-                "tx": transfer["transactionHash"],
-                "lp": args["from"],
-                "symbol": token,
-                "amount": -scaleDecimals(args["value"], 18)
-            }
-            out.append(rowFrom)
+            for dest in ["to", "from"]:
+                # Person that transfer is to is increasing their LP position while
+                # the person it is from is decreasing their LP position
+                sign = 1 if dest == "to" else -1
+                row = {
+                    "block": transfer["blockNumber"],
+                    "tx": transfer["transactionHash"],
+                    "lp": args[dest],
+                    "symbol": token,
+                    "amount": sign * scaleDecimals(args["value"], decimals),
+                }
+                out.append(row)
 
     return out
 
 
 if __name__ == "__main__":
     # Load parameters
-    with open("parameters.yaml", "r") as f:
-        params = yaml.load(f, yaml.Loader)
+    params = parse_config("parameters.yaml")
 
     # Get start/end blocks for LP rewards
     v1StartBlock = params["lp"]["v1_start_block"]
@@ -56,44 +52,42 @@ if __name__ == "__main__":
     # Load raw data
     with open("raw/v1Transfers.json", "r") as f:
         v1TransfersRaw = json.loads(f.read())
-    v1Transfers = pd.DataFrame(processTransfers(v1TransfersRaw))
+    v1Transfers = pd.DataFrame(processTransfers(v1TransfersRaw, 1))
 
     with open("raw/v2Transfers.json", "r") as f:
         v2TransfersRaw = json.loads(f.read())
-    v2Transfers = pd.DataFrame(processTransfers(v2TransfersRaw))
+    v2Transfers = pd.DataFrame(processTransfers(v2TransfersRaw, 2))
 
-    # Get all blocks and LPs
+    # Get all blocks and LPs -- We will exclude the 0x0 address since it
+    # isn't a real LP and is just used in minting/burning
     allLps = list(
         set(v1Transfers["lp"].unique())
         .union(set(v2Transfers["lp"].unique()))
+        .difference(set(["0x0000000000000000000000000000000000000000"]))
     )
     allTokens = params["lp"]["tokens"]
     newIndex = pd.MultiIndex.from_product([allTokens, allLps])
 
     # Cumulative totals
-    v1Df = (
-        v1Transfers
-        .pivot_table(
-            index="block", columns=["symbol", "lp"], values="amount"
-        )
-        .fillna(0.0)
-        .reindex(columns=newIndex, fill_value=0.0)
-        .sort_index()
-        .cumsum()
-        .loc[v1StartBlock:v1EndBlock, :]
-    )
-    v1Df.to_parquet("intermediate/v1CumulativeLP.parquet")
+    for version in [1, 2]:
+        if version == 1:
+            _df = v1Transfers
+            startBlock, endBlock = v1StartBlock, v1EndBlock
+        elif version == 2:
+            _df = v2Transfers
+            startBlock, endBlock = v2StartBlock, v2EndBlock
+        else:
+            raise ValueError("Version must be 1 or 2")
 
-    # Cumulative totals
-    v2Df = (
-        v2Transfers
-        .pivot_table(
-            index="block", columns=["symbol", "lp"], values="amount"
+        data = (
+            _df
+            .pivot_table(
+                index="block", columns=["symbol", "lp"], values="amount"
+            )
+            .fillna(0.0)
+            .reindex(columns=newIndex, fill_value=0.0)
+            .sort_index()
+            .cumsum()
+            .loc[startBlock:endBlock, :]
         )
-        .fillna(0.0)
-        .reindex(columns=newIndex, fill_value=0.0)
-        .sort_index()
-        .cumsum()
-        .loc[v2StartBlock:v2EndBlock, :]
-    )
-    v2Df.to_parquet("intermediate/v2CumulativeLP.parquet")
+        data.to_parquet(f"intermediate/v{version}CumulativeLp.parquet")
