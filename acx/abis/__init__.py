@@ -6,7 +6,8 @@ import pkgutil
 ABIs = {
     "BridgePool": "v1BridgePool.json",
     "HubPool": "v2HubPool.json",
-    "SpokePool": "v2SpokePool.json"
+    "SpokePool": "v2SpokePool.json",
+    "ERC20": "ERC20.json"
 }
 
 

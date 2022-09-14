@@ -18,3 +18,7 @@ ID_TO_NAME = {
 ID_TO_SHORTNAME = {
     x["chainId"]: x["shortName"] for x in CHAINLIST
 }
+
+SHORTNAME_TO_ID = {
+    x["shortName"]: x["chainId"] for x in CHAINLIST
+}

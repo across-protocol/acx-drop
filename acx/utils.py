@@ -1,5 +1,6 @@
 import json
 import requests
+import time
 
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
@@ -111,7 +112,7 @@ def createNewSubsetDict(newKey, newValue, d):
     return {x[newKey]: x[newValue] for x in d}
 
 
-def getWithRetries(url, params, nRetries=5, backoffFactor=1.0):
+def getWithRetries(url, params, nRetries=5, backoffFactor=1.0, preSleep=0.0):
     # Create requests session
     session = requests.Session()
 
@@ -126,6 +127,7 @@ def getWithRetries(url, params, nRetries=5, backoffFactor=1.0):
     session.mount("http://", adapter)
     session.mount("https://", adapter)
 
+    time.sleep(preSleep)
     res = session.get(url, params=params)
 
     return res

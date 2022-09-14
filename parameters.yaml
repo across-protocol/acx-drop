@@ -1,10 +1,17 @@
 # Nodes that can be used to request data
 rpc_node:
-  mainnet: "https://mainnet.infura.io/v3/iL0veACXtok3nsThAnkY0u"
-  optimism: "https://optimism-mainnet.infura.io/v3/iL0veACXtok3nsThAnkY0u"
-  polygon: "https://polygon-mainnet.infura.io/v3/iL0veACXtok3nsThAnkY0u"
-  boba: "https://lightning-replica.boba.network"
-  arbitrum: "https://arbitrum-mainnet.infura.io/v3/iL0veACXtok3nsThAnkY0u"
+  mainnet: !ENV ${MAINNET_NODE}
+  optimism: !ENV ${OPTIMISM_NODE}
+  polygon: !ENV ${POLYGON_NODE}
+  boba: !ENV ${BOBA_NODE}
+  arbitrum: !ENV ${ARBITRUM_NODE}
+
+etherscan_keys:
+  mainnet: !ENV ${ETHERSCAN_API_KEY}
+  optimism: !ENV ${OPTIMISTIC_ETHERSCAN_API_KEY}
+  polygon: !ENV ${POLYGONSCAN_API_KEY}
+  boba: !ENV ${BOBASCAN_API_KEY}
+  arbitrum: !ENV ${ARBISCAN_API_KEY}
 
 # `across` parameters contain certain pieces of information that are useful
 # to reference in multiple places
@@ -80,17 +87,17 @@ bridgoor:
   v1_end_block: 14987809  # 2022-06-19T00:00+00:00
 
   v2_start_block:  # 2022-05-24T14:00+00:00
-    mainnet: 14836162
-    optimism: 8915780
-    polygon: 28714237
-    boba: 622100
-    arbitrum: 12862573
+    1: 14836162
+    10: 8915780
+    137: 28714237
+    288: 622100
+    42161: 12862573
   v2_end_block:  # 2022-07-19T00:00+00:00
-    mainnet: 15169695
-    optimism: 14924065
-    polygon: 30878164
-    boba: 731786
-    arbitrum: 17963566
+    1: 15169695
+    10: 14924065
+    137: 30878164
+    288: 731786
+    42161: 17963566
 
   # Shared parameters
   parameters:
@@ -124,6 +131,11 @@ lp:
     total_rewards: 65_000_000
 
 misc:
+  # Block data
+  block_start_ts_mainnet: 1636329600  # 2021-11-08T00:00
+  block_start_ts_nonmainnet: 1640995200  # 2022-01-01T00:00
+  block_end_ts: 1662508800  # 2022-09-08T00:00
+
   # Price data
   price_start_ts: 1609459200  # 2021-01-01T00:00
   price_end_ts: 1662508800  # 2022-09-08T00:00

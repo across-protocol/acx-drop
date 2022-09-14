@@ -1,3 +1,4 @@
 pandas >= 1.0
+pyarrow
+pyaml-env
 web3
-pyyaml
