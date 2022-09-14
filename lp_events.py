@@ -70,4 +70,4 @@ if __name__ == "__main__":
         )
 
         with open(f"raw/v2Transfers.json", "w") as f:
-            json.dump(events, f)
+            json.dump(v2Transfers, f)
