@@ -2,7 +2,8 @@ import json
 
 import pandas as pd
 import web3
-import yaml
+
+from pyaml_env import parse_config
 
 from acx.abis import getABI
 from acx.data.tokens import SYMBOL_TO_CHAIN_TO_ADDRESS
@@ -11,8 +12,7 @@ from acx.utils import findEvents
 
 if __name__ == "__main__":
     # Load parameters
-    with open("parameters.yaml", "r") as f:
-        params = yaml.load(f, yaml.Loader)
+    params = parse_config("parameters.yaml")
     nBlocks = params["bridgoor"]["n_blocks"]
 
     #

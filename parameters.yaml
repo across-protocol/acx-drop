@@ -1,17 +1,17 @@
-etherscan_keys:
-  mainnet: "ETHERSCANKEY"
-  optimism: "OPTIMISTICETHERSCANKEY"
-  polygon: "POLYGONSCANKEY"
-  boba: "BOBASCANKEY"
-  arbitrum: "ARBISCANKEY"
-
 # Nodes that can be used to request data
 rpc_node:
-  mainnet: "https://mainnet.infura.io/v3/iL0veACXtok3nsThAnkY0u"
-  optimism: "https://optimism-mainnet.infura.io/v3/iL0veACXtok3nsThAnkY0u"
-  polygon: "https://polygon-mainnet.infura.io/v3/iL0veACXtok3nsThAnkY0u"
-  boba: "https://lightning-replica.boba.network"
-  arbitrum: "https://arbitrum-mainnet.infura.io/v3/iL0veACXtok3nsThAnkY0u"
+  mainnet: !ENV ${MAINNET_NODE}
+  optimism: !ENV ${OPTIMISM_NODE}
+  polygon: !ENV ${POLYGON_NODE}
+  boba: !ENV ${BOBA_NODE}
+  arbitrum: !ENV ${ARBITRUM_NODE}
+
+etherscan_keys:
+  mainnet: !ENV ${ETHERSCAN_API_KEY}
+  optimism: !ENV ${OPTIMISTIC_ETHERSCAN_API_KEY}
+  polygon: !ENV ${POLYGONSCAN_API_KEY}
+  boba: !ENV ${BOBASCAN_API_KEY}
+  arbitrum: !ENV ${ARBISCAN_API_KEY}
 
 # `across` parameters contain certain pieces of information that are useful
 # to reference in multiple places
