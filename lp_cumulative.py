@@ -79,7 +79,8 @@ if __name__ == "__main__":
         data = (
             _df
             .pivot_table(
-                index="block", columns=["symbol", "lp"], values="amount"
+                index="block", columns=["symbol", "lp"], values="amount",
+                aggfunc="sum"
             )
             .fillna(0.0)
             .reindex(columns=newIndex, fill_value=0.0)
