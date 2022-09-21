@@ -131,3 +131,21 @@ def getWithRetries(url, params, nRetries=5, backoffFactor=1.0, preSleep=0.0):
     res = session.get(url, params=params)
 
     return res
+
+
+def cutAndPowerScore(s, lb, ub, power):
+    """
+    A function that takes a pandas series as an input and returns a
+    new series where the values have been clipped at some ub and then
+    raised to a power. It then computes the percentage of the total
+    score that each observation is -- i.e. normalizes so that the sum
+    of the values is 1
+
+    Parameters
+    ----------
+    s : pd.Series
+        A series of data
+    """
+    out = s.clip(lb, ub)**power
+
+    return out / out.sum()
