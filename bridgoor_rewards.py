@@ -91,5 +91,5 @@ if __name__ == "__main__":
     bridgoors["acx"] = bridgoors.eval("score * @totalACX")
 
     out = bridgoors.set_index("recipient")["acx"].to_dict()
-    with open("final/bridgoor.json", "w") as f:
+    with open("final/bridgoor_rewards.json", "w") as f:
         json.dump(out, f)
