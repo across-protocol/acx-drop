@@ -125,6 +125,12 @@ lp:
   # v2 end block is (for now) arbitrarily specified on 2022-09-07T00:00+00:00
   v2_end_block: 15487072
 
+  v2_lp_token_creation_block:
+    DAI: 14828021
+    USDC: 14824012
+    WBTC: 14824012
+    WETH: 14823998
+
   # Shared parameters
   parameters:
     # Total rewards shared between LPs
