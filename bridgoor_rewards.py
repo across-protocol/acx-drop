@@ -5,33 +5,38 @@ import pandas as pd
 
 from pyaml_env import parse_config
 
+from acx.data.chains import SHORTNAME_TO_ID
 from acx.utils import cutAndPowerScore
 
-
-blocks = pd.read_json("raw/blocks.json", orient="records")
-
-blockLookup = {}
-
-for chainId in [1, 10, 137, 288, 42161]:
-    blockToDate = blocks.query("chainId == @chainId").sort_values("block")
-    _block = blockToDate["block"].to_numpy()
-    _date = blockToDate["date"].to_numpy()
-
-    blockLookup[chainId] = {"blocks": _block, "dates": _date}
-
-
-def determineDate(x):
-    chainId = 1 if x["version"] == 1 else x["originChain"]
-    bl = blockLookup[chainId]
-    _idx = np.searchsorted(bl["blocks"], x["block"])
-    _date = bl["dates"][_idx]
-
-    return _date
 
 
 if __name__ == "__main__":
     # Load parameters
     params = parse_config("parameters.yaml")
+
+    # Create block to date lookup function
+    blocks = pd.read_json("raw/blocks.json", orient="records")
+
+    blockLookup = {}
+    for chain in params["bridgoor"]["chains"]:
+        chainId = SHORTNAME_TO_ID[chain]
+
+        blockToDate = blocks.query("chainId == @chainId").sort_values("block")
+        _block = blockToDate["block"].to_numpy()
+        _date = blockToDate["date"].to_numpy()
+
+        blockLookup[chainId] = {"blocks": _block, "dates": _date}
+
+
+    def determineDate(x):
+        chainId = 1 if x["version"] == 1 else x["originChain"]
+
+        bl = blockLookup[chainId]
+
+        _idx = np.searchsorted(bl["blocks"], x["block"])
+        _date = bl["dates"][_idx]
+
+        return _date
 
     # Inclusion parameters
     transferCount = params["bridgoor"]["parameters"]["inclusion"]["transfer_count"]
