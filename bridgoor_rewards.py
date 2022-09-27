@@ -66,6 +66,10 @@ if __name__ == "__main__":
     )
     bridgesWPrices["amountUSD"] = bridgesWPrices.eval("price * amount")
 
+    # Make sure we have prices for all observations
+    if bridgesWPrices["price"].isna().any():
+        raise ValueError("Missing prices and cannot compute bridgoor rewards")
+
     # Get transaction count and volume
     bridgoors = (
         bridgesWPrices
