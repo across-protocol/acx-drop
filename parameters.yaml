@@ -101,8 +101,23 @@ bridgoor:
 
   # Shared parameters
   parameters:
+    inclusion:
+      # If you do this many transfers and a certain volume, you're included
+      transfer_count: 2
+      transfer_count_volume: 500
+
+      # If you do this amount of volume, you're included
+      volume_inclusion: 10_000
+
+    score:
+      # The power that the clipped volume is raised to
+      power: 0.5
+      # The upper bound of volume that counts for score
+      ub: 5_000_000
+
     # min bridge size (in USD) to be included in the airdrop
     usd_cutoff: 250.0
+
     # Total rewards shared between bridgoors
     total_rewards: 15_000_000
 
@@ -146,3 +161,4 @@ misc:
   price_start_ts: 1609459200  # 2021-01-01T00:00
   price_end_ts: 1662508800  # 2022-09-08T00:00
   price_tokens: ["DAI", "ETH", "USDC", "WBTC", "WETH"]
+
