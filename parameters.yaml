@@ -136,6 +136,26 @@ lp:
     # Total rewards shared between LPs
     total_rewards: 65_000_000
 
+# `bt` parameters correspond to specifications on which "bridge travelers"
+# should qualify for the "pre-drop" -- After they qualify, they still need
+# to accomplish their pre-determined Across tasks
+bt:
+
+  # Hop parameters
+  hop:
+    chains: ["mainnet", "optimism", "polygon", "arbitrum"]
+    tokens: ["DAI", "USDC", "ETH", "WETH"]
+    first_block:
+      1: 12_650_000
+      10: 2_000
+      137: 15_953_000
+      42161: 1_091_000
+    last_block:  # 2022-09-07T00:00
+      1: 15487072
+      10: 22207314
+      137: 32782790
+      42161: 23258470
+
 misc:
   # Block data
   block_start_ts_mainnet: 1636329600  # 2021-11-08T00:00
