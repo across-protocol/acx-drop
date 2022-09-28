@@ -143,18 +143,20 @@ bt:
 
   # Hop parameters
   hop:
-    chains: ["mainnet", "optimism", "polygon", "arbitrum"]
+    chains: ["mainnet", "optimism", "xdai", "polygon", "arbitrum"]
     tokens: ["DAI", "USDC", "ETH", "WETH"]
-    first_block:
+    first_block:  # First block Hop was live on each chain
       1: 12_650_000
       10: 2_000
+      100: 16_629_000
       137: 15_953_000
       42161: 1_091_000
     last_block:  # 2022-09-07T00:00
-      1: 15487072
-      10: 22207314
-      137: 32782790
-      42161: 23258470
+      1: 15_487_072
+      10: 22_207_314
+      100: 24_071_518
+      137: 32_782_790
+      42161: 23_258_470
 
 misc:
   # Block data

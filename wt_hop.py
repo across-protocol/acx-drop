@@ -11,7 +11,8 @@ from acx.thegraph import submit_query_iterate
 
 def retrieveTransfers(
         network, startBlock, endBlock,
-        chainIds, tokens, npages=10, verbose=False
+        destinationChainIds, tokens,
+        npages=10, verbose=False
 ):
     """
     Grabs all of the transfers from `network`
@@ -24,6 +25,10 @@ def retrieveTransfers(
         The block to start collecting data from
     end_block : int
         The block to stop collecting data from
+    destinatinChainIds : list(int)
+        A list of destination chain IDs that we want data from
+    tokens : list(str)
+        A list of tokens that we want to retrieve
     npages : int
         The maximum number of pages to retrieve
     verbose : bool
@@ -46,7 +51,7 @@ def retrieveTransfers(
         "where": {
             "blockNumber_gt": startBlock,
             "blockNumber_lte": endBlock,
-            "destinationChainId_in": chainIds,
+            "destinationChainId_in": destinationChainIds,
             "token_in": "[\"" + "\", \"".join(tokens) + "\"]"
         },
     }
@@ -78,6 +83,9 @@ if __name__ == "__main__":
         fb = HOP_FIRST_BLOCK[chainId]
         tb = HOP_LAST_BLOCK[chainId]
 
+        # The Graph allows for retrieving 1,000 events at a time so we
+        # set the number of pages to 999 as a magic number because we
+        # know that no chain has more than 999,000 transfers
         transfers = retrieveTransfers(
             chain, fb, tb,
             SUPPORTED_CHAIN_IDS, SUPPORTED_TOKENS,
@@ -117,3 +125,4 @@ if __name__ == "__main__":
         }
     )
 
+    hop.to_parquet("raw/hop_transfers.parquet")
