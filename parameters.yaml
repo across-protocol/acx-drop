@@ -151,6 +151,27 @@ lp:
     # Total rewards shared between LPs
     total_rewards: 65_000_000
 
+bt:
+
+  # Cbridge
+  cbridge:
+    chains: ["mainnet", "optimism", "polygon", "arbitrum"]
+    tokens: ["DAI", "USDC", "ETH", "WETH"]
+
+    contract_info:
+      1:
+        address: "0x5427FEFA711Eff984124bFBB1AB6fbf5E3DA1820"
+        firstBlock: 13_719_989
+      10:
+        address: "0x9D39Fc627A6d9d9F8C831c16995b209548cc3401"
+        firstBlock: 646_444
+      137:
+        address: "0x88DCDC47D2f83a99CF0000FDF667A468bB958a78"
+        firstBlock: 22_006_535
+      42161:
+        address: "0x1619DE6B6B20eD217a58d00f37B9d47C7663feca"
+        firstBlock: 3_483_123
+
 misc:
   # Block data
   block_start_ts_mainnet: 1636329600  # 2021-11-08T00:00
