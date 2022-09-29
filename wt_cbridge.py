@@ -16,13 +16,13 @@ if __name__ == "__main__":
     params = parse_config("parameters.yaml")
 
     # Tokens to support
-    SUPPORTED_CHAINS = params["bt"]["cbridge"]["chains"]
-    SUPPORTED_TOKENS = params["bt"]["cbridge"]["tokens"]
+    SUPPORTED_CHAINS = params["traveler"]["cbridge"]["chains"]
+    SUPPORTED_TOKENS = params["traveler"]["cbridge"]["tokens"]
 
     cbridgeRelays = []
     for chain in SUPPORTED_CHAINS:
         chainId = SHORTNAME_TO_ID[chain]
-        chainInfo = params["bt"]["cbridge"]["contract_info"][chainId]
+        chainInfo = params["traveler"]["cbridge"]["contract_info"][chainId]
 
         # Web 3 instance for particular chain
         provider = web3.Web3.HTTPProvider(
@@ -40,7 +40,15 @@ if __name__ == "__main__":
         # Get first, last block, and number of blocks to query at once
         fb = chainInfo["first_block"]
         lb = chainInfo["last_block"]
-        nBlocks = params["bt"]["n_blocks"][chainId]
+        nBlocks = params["traveler"]["n_blocks"][chainId]
+
+        # Find token addresses that we might be interested in
+        wantedTokenAddresses = []
+        for token in SUPPORTED_TOKENS:
+            if chainId in SYMBOL_TO_CHAIN_TO_ADDRESS[token].keys():
+                wantedTokenAddresses.append(
+                    SYMBOL_TO_CHAIN_TO_ADDRESS[token][chainId]
+                )
 
         relays = findEvents(
             w3, bridge.events.Relay, fb, lb,
@@ -53,7 +61,7 @@ if __name__ == "__main__":
 
             # Skip tokens that aren't in our "tokens universe"
             tokenAddress = relayArgs["token"]
-            if tokenAddress not in CHAIN_TO_ADDRESS_TO_SYMBOL[chainId].keys():
+            if tokenAddress not in wantedTokenAddresses:
                 continue
 
             symbol = CHAIN_TO_ADDRESS_TO_SYMBOL[chainId][tokenAddress]
@@ -73,7 +81,7 @@ if __name__ == "__main__":
             row["amount"] = scaleDecimals(relayArgs["amount"], decimals)
 
             out.append(row)
-        chainDf = pd.DataFrame(out).query("symbol in @SUPPORTED_TOKENS")
+        chainDf = pd.DataFrame(out)
         cbridgeRelays.append(chainDf)
 
     df = pd.concat(cbridgeRelays, axis=0, ignore_index=True)
