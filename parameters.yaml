@@ -151,7 +151,26 @@ lp:
     # Total rewards shared between LPs
     total_rewards: 65_000_000
 
+# `bt` parameters correspond to specifications on which "bridge travelers"
+# should qualify for the "pre-drop" -- After they qualify, they still need
+# to accomplish their pre-determined Across tasks
 bt:
+  # Hop parameters
+  hop:
+    chains: ["mainnet", "optimism", "xdai", "polygon", "arbitrum"]
+    tokens: ["DAI", "USDC", "ETH", "WETH"]
+    first_block:  # First block Hop was live on each chain
+      1: 12_650_000
+      10: 2_000
+      100: 16_629_000
+      137: 15_953_000
+      42161: 1_091_000
+    last_block:  # 2022-09-07T00:00
+      1: 15_487_072
+      10: 22_207_314
+      100: 24_071_518
+      137: 32_782_790
+      42161: 23_258_470
 
   # Stargate parameters
   stg:
@@ -163,7 +182,6 @@ bt:
       137: 3_500
       288: 5_000
       42161: 50_000
-
 
     contract_info:
       1:
