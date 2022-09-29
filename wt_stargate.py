@@ -96,9 +96,10 @@ if __name__ == "__main__":
                 continue
 
             # Get pool address and first/last block from params
-            poolAddress = contractInfo[chainId][token]["address"]
-            fb = contractInfo[chainId][token]["first_block"]
-            lb = contractInfo[chainId][token]["last_block"]
+            poolContract = contractInfo[chainId][token]
+            poolAddress = poolContract["address"]
+            fb = poolContract["first_block"]
+            lb = poolContract["last_block"]
 
             # Create pool
             pool = w3.eth.contract(
