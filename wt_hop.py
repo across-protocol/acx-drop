@@ -70,11 +70,11 @@ if __name__ == "__main__":
     # Load parameters
     params = parse_config("parameters.yaml")
 
-    HOP_FIRST_BLOCK = params["bt"]["hop"]["first_block"]
-    HOP_LAST_BLOCK = params["bt"]["hop"]["last_block"]
-    SUPPORTED_CHAINS = params["bt"]["hop"]["chains"]
+    HOP_FIRST_BLOCK = params["traveler"]["hop"]["first_block"]
+    HOP_LAST_BLOCK = params["traveler"]["hop"]["last_block"]
+    SUPPORTED_CHAINS = params["traveler"]["hop"]["chains"]
     SUPPORTED_CHAIN_IDS = [SHORTNAME_TO_ID[c] for c in SUPPORTED_CHAINS]
-    SUPPORTED_TOKENS = params["bt"]["hop"]["tokens"]
+    SUPPORTED_TOKENS = params["traveler"]["hop"]["tokens"]
 
     # Retrieve mainnet transfers separately since they're special
     allDfs = []
