@@ -7,6 +7,7 @@ ABIs = {
     "BridgePool": "v1BridgePool.json",
     "HubPool": "v2HubPool.json",
     "SpokePool": "v2SpokePool.json",
+    "cBridge": "cBridge.json",
     "StargatePool": "StargatePool.json",
     "ERC20": "ERC20.json"
 }
