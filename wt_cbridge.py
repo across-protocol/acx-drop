@@ -51,7 +51,7 @@ if __name__ == "__main__":
         for relay in relays:
             relayArgs = relay["args"]
 
-            # Skip tokens that aren't in our supported list
+            # Skip tokens that aren't in our "tokens universe"
             tokenAddress = relayArgs["token"]
             if tokenAddress not in CHAIN_TO_ADDRESS_TO_SYMBOL[chainId].keys():
                 continue
