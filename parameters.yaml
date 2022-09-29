@@ -151,11 +151,10 @@ lp:
     # Total rewards shared between LPs
     total_rewards: 65_000_000
 
-# `bt` parameters correspond to specifications on which "bridge travelers"
+# `traveler` parameters correspond to specifications on which "bridge travelers"
 # should qualify for the "pre-drop" -- After they qualify, they still need
 # to accomplish their pre-determined Across tasks
-bt:
-
+traveler:
   n_blocks:
     1: 25_000
     10: 100_000
@@ -248,9 +247,7 @@ bt:
           first_block: 8041115
           last_block: 23_258_470  # 2022-09-07T00:00
 
-
   # Synapse parameters
->>>>>>> 555701e6da97da61a526f53c86f39e874a56cd10
 
 misc:
   # Block data

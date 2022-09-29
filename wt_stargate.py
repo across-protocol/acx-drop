@@ -33,6 +33,13 @@ def retrieveSwapRemotes(w3, pool, startBlock, lastBlock, nBlocks):
     # Meta data about the pool
     chainId = w3.eth.chainId
     tokenAddress = pool.functions.token().call()
+
+    # Check whether we have data on this chainId/token address combo
+    assert chainId in CHAIN_TO_ADDRESS_TO_SYMBOL.keys()
+    assert tokenAddress in CHAIN_TO_ADDRESS_TO_SYMBOL[chainId].keys()
+
+    # If they are, then we can proceed -- Otherwise we will error out
+    # with an assertion error
     symbol = CHAIN_TO_ADDRESS_TO_SYMBOL[chainId][tokenAddress]
     decimals = SYMBOL_TO_DECIMALS[symbol]
 
@@ -65,9 +72,11 @@ if __name__ == "__main__":
     # Load parameters
     params = parse_config("parameters.yaml")
 
+    SUPPORTED_CHAINS = params["traveler"]["stg"]["chains"]
+    SUPPORTED_TOKENS = params["traveler"]["stg"]["tokens"]
 
     swapRemotes = []
-    for chain in params["bt"]["stg"]["chains"][3:]:
+    for chain in SUPPORTED_CHAINS:
         # Find chain ID
         chainId = SHORTNAME_TO_ID[chain]
 
@@ -77,17 +86,19 @@ if __name__ == "__main__":
             request_kwargs={"timeout": 60}
         )
         w3 = web3.Web3(provider)
-        nBlocks = params["bt"]["stg"]["n_blocks"][chainId]
+        nBlocks = params["traveler"]["stg"]["n_blocks"][chainId]
 
-        for token in params["bt"]["stg"]["tokens"]:
+        for token in SUPPORTED_TOKENS:
+            contractInfo = params["traveler"]["stg"]["contract_info"]
+
             # Check whether the pool exists -- If not, move on to the next
-            if token not in params["bt"]["stg"]["contract_info"][chainId].keys():
+            if token not in contractInfo[chainId].keys():
                 continue
 
             # Get pool address and first/last block from params
-            poolAddress = params["bt"]["stg"]["contract_info"][chainId][token]["address"]
-            fb = params["bt"]["stg"]["contract_info"][chainId][token]["first_block"]
-            lb = params["bt"]["stg"]["contract_info"][chainId][token]["last_block"]
+            poolAddress = contractInfo[chainId][token]["address"]
+            fb = contractInfo[chainId][token]["first_block"]
+            lb = contractInfo[chainId][token]["last_block"]
 
             # Create pool
             pool = w3.eth.contract(
