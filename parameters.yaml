@@ -162,6 +162,29 @@ traveler:
     288: 5_000
     42161: 50_000
 
+  # Cbridge
+  cbridge:
+    chains: ["mainnet", "optimism", "polygon", "arbitrum"]
+    tokens: ["DAI", "USDC", "ETH", "WETH"]
+
+    contract_info:
+      1:
+        address: "0x5427FEFA711Eff984124bFBB1AB6fbf5E3DA1820"
+        first_block: 13_719_989  # Deployment block
+        last_block: 15_487_072  # 2022-09-07T00:00
+      10:
+        address: "0x9D39Fc627A6d9d9F8C831c16995b209548cc3401"
+        first_block: 646_444  # Deployment block
+        last_block: 15_487_072  # 2022-09-07T00:00
+      137:
+        address: "0x88DCDC47D2f83a99CF0000FDF667A468bB958a78"
+        first_block: 22_006_535  # Deployment block
+        last_block: 32_782_790  # 2022-09-07T00:00
+      42161:
+        address: "0x1619DE6B6B20eD217a58d00f37B9d47C7663feca"
+        first_block: 3_483_123  # Deployment block
+        last_block: 23_258_470  # 2022-09-07T00:00
+
   # Hop parameters
   hop:
     chains: ["mainnet", "optimism", "xdai", "polygon", "arbitrum"]
