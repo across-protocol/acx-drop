@@ -206,13 +206,6 @@ traveler:
   stg:
     chains: ["mainnet", "optimism", "polygon", "arbitrum"]
     tokens: ["USDC", "SGETH"]
-    n_blocks:
-      1: 25_000
-      10: 100_000
-      137: 3_500
-      288: 5_000
-      42161: 50_000
-
     contract_info:
       1:
         SGETH:
