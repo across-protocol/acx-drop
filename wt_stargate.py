@@ -33,6 +33,13 @@ def retrieveSwapRemotes(w3, pool, startBlock, lastBlock, nBlocks):
     # Meta data about the pool
     chainId = w3.eth.chainId
     tokenAddress = pool.functions.token().call()
+
+    # Check whether we have data on this chainId/token address combo
+    assert chainId in CHAIN_TO_ADDRESS_TO_SYMBOL.keys()
+    assert tokenAddress in CHAIN_TO_ADDRESS_TO_SYMBOL[chainId].keys()
+
+    # If they are, then we can proceed -- Otherwise we will error out
+    # with an assertion error
     symbol = CHAIN_TO_ADDRESS_TO_SYMBOL[chainId][tokenAddress]
     decimals = SYMBOL_TO_DECIMALS[symbol]
 
