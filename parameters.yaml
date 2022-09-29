@@ -151,7 +151,11 @@ lp:
     # Total rewards shared between LPs
     total_rewards: 65_000_000
 
+# `bt` parameters correspond to specifications on which "bridge travelers"
+# should qualify for the "pre-drop" -- After they qualify, they still need
+# to accomplish their pre-determined Across tasks
 bt:
+
   n_blocks:
     1: 25_000
     10: 100_000
@@ -181,6 +185,72 @@ bt:
         address: "0x1619DE6B6B20eD217a58d00f37B9d47C7663feca"
         first_block: 3_483_123  # Deployment block
         last_block: 23_258_470  # 2022-09-07T00:00
+
+  # Hop parameters
+  hop:
+    chains: ["mainnet", "optimism", "xdai", "polygon", "arbitrum"]
+    tokens: ["DAI", "USDC", "ETH", "WETH"]
+    first_block:  # First block Hop was live on each chain
+      1: 12_650_000
+      10: 2_000
+      100: 16_629_000
+      137: 15_953_000
+      42161: 1_091_000
+    last_block:  # 2022-09-07T00:00
+      1: 15_487_072
+      10: 22_207_314
+      100: 24_071_518
+      137: 32_782_790
+      42161: 23_258_470
+
+  # Stargate parameters
+  stg:
+    chains: ["mainnet", "optimism", "polygon", "arbitrum"]
+    tokens: ["USDC", "SGETH"]
+    n_blocks:
+      1: 25_000
+      10: 100_000
+      137: 3_500
+      288: 5_000
+      42161: 50_000
+
+    contract_info:
+      1:
+        SGETH:
+          address: "0x101816545F6bd2b1076434B54383a1E633390A2E"
+          first_block: 15_035_701
+          last_block: 15_487_072  # 2022-09-07T00:00
+        USDC:
+          address: "0xdf0770dF86a8034b3EFEf0A1Bb3c889B8332FF56"
+          first_block: 14_403_393
+          last_block: 15_487_072  # 2022-09-07T00:00
+      10:
+        SGETH:
+          address: "0xd22363e3762cA7339569F3d33EADe20127D5F98C"
+          first_block: 13_332_734
+          last_block: 22_207_314  # 2022-09-07T00:00
+        USDC:
+          address: "0xDecC0c09c3B5f6e92EF4184125D5648a66E35298"
+          first_block: 4_535_509
+          last_block: 22_207_314  # 2022-09-07T00:00
+      137:
+        USDC:
+          address: "0x1205f31718499dBf1fCa446663B532Ef87481fe1"
+          first_block: 4_535_509
+          last_block: 32_782_790  # 2022-09-07T00:00
+      42161:
+        SGETH:
+          address: "0x915A55e36A01285A14f05dE6e81ED9cE89772f8e"
+          first_block: 16_112_680
+          last_block: 23_258_470  # 2022-09-07T00:00
+        USDC:
+          address: "0x892785f33CdeE22A30AEF750F285E18c18040c3e"
+          first_block: 8041115
+          last_block: 23_258_470  # 2022-09-07T00:00
+
+
+  # Synapse parameters
+>>>>>>> 555701e6da97da61a526f53c86f39e874a56cd10
 
 misc:
   # Block data
