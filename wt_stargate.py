@@ -86,7 +86,7 @@ if __name__ == "__main__":
             request_kwargs={"timeout": 60}
         )
         w3 = web3.Web3(provider)
-        nBlocks = params["traveler"]["stg"]["n_blocks"][chainId]
+        nBlocks = params["traveler"]["n_blocks"][chainId]
 
         for token in SUPPORTED_TOKENS:
             contractInfo = params["traveler"]["stg"]["contract_info"]

@@ -155,6 +155,13 @@ lp:
 # should qualify for the "pre-drop" -- After they qualify, they still need
 # to accomplish their pre-determined Across tasks
 traveler:
+  n_blocks:
+    1: 25_000
+    10: 100_000
+    137: 3_500
+    288: 5_000
+    42161: 50_000
+
   # Hop parameters
   hop:
     chains: ["mainnet", "optimism", "xdai", "polygon", "arbitrum"]
@@ -176,13 +183,6 @@ traveler:
   stg:
     chains: ["mainnet", "optimism", "polygon", "arbitrum"]
     tokens: ["USDC", "SGETH"]
-    n_blocks:
-      1: 25_000
-      10: 100_000
-      137: 3_500
-      288: 5_000
-      42161: 50_000
-
     contract_info:
       1:
         SGETH:
