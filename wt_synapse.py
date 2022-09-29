@@ -81,11 +81,12 @@ if __name__ == "__main__":
     # Chains/Tokens to support
     SUPPORTED_CHAINS = params["traveler"]["cbridge"]["chains"]
     SUPPORTED_TOKENS = params["traveler"]["cbridge"]["tokens"]
+    contractInfo = params["traveler"]["synapse"]["contract_info"]
 
     synapseInflows = []
     for chain in SUPPORTED_CHAINS:
         chainId = SHORTNAME_TO_ID[chain]
-        chainInfo = params["traveler"]["synapse"]["contract_info"][chainId]
+        chainInfo = contractInfo[chainId]
 
         # Select a single chain so we have address -> symbol
         ADDRESS_TO_SYMBOL = CHAIN_TO_ADDRESS_TO_SYMBOL[chainId]
