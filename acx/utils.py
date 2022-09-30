@@ -112,7 +112,7 @@ def createNewSubsetDict(newKey, newValue, d):
     return {x[newKey]: x[newValue] for x in d}
 
 
-def getWithRetries(url, params, nRetries=5, backoffFactor=1.0, preSleep=0.0):
+def createSessionWithRetries(nRetries=5, backoffFactor=1.0):
     # Create requests session
     session = requests.Session()
 
@@ -121,11 +121,17 @@ def getWithRetries(url, params, nRetries=5, backoffFactor=1.0, preSleep=0.0):
         total=nRetries,
         backoff_factor=backoffFactor,
         status_forcelist=[429, 500, 502, 503, 504],
-        allowed_methods=["GET"]
+        allowed_methods=["GET", "POST"]
     )
     adapter = HTTPAdapter(max_retries=retry_strategy)
     session.mount("http://", adapter)
     session.mount("https://", adapter)
+
+    return session
+
+
+def getWithRetries(url, params, nRetries=5, backoffFactor=1.0, preSleep=0.0):
+    session = createSessionWithRetries(nRetries, backoffFactor)
 
     time.sleep(preSleep)
     res = session.get(url, params=params)
