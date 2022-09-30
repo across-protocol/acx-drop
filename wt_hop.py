@@ -70,15 +70,21 @@ if __name__ == "__main__":
     # Load parameters
     params = parse_config("parameters.yaml")
 
+    # First and last block data
     HOP_FIRST_BLOCK = params["traveler"]["hop"]["first_block"]
     HOP_LAST_BLOCK = params["traveler"]["hop"]["last_block"]
-    SUPPORTED_CHAINS = params["traveler"]["hop"]["chains"]
-    SUPPORTED_CHAIN_IDS = [SHORTNAME_TO_ID[c] for c in SUPPORTED_CHAINS]
+
+    # Chains we collect data from
+    HOP_ORIGIN_CHAINS = params["traveler"]["hop"]["chains"]
     SUPPORTED_TOKENS = params["traveler"]["hop"]["tokens"]
+
+    # Chains that we want transfers to
+    SUPPORTED_CHAINS = params["traveler"]["chains"]
+    SUPPORTED_CHAIN_IDS = [SHORTNAME_TO_ID[c] for c in SUPPORTED_CHAINS]
 
     # Retrieve mainnet transfers separately since they're special
     allDfs = []
-    for chain in SUPPORTED_CHAINS:
+    for chain in HOP_ORIGIN_CHAINS:
         chainId = SHORTNAME_TO_ID[chain]
         fb = HOP_FIRST_BLOCK[chainId]
         tb = HOP_LAST_BLOCK[chainId]
@@ -87,7 +93,7 @@ if __name__ == "__main__":
         # set the number of pages to 999 as a magic number because we
         # know that no chain has more than 999,000 transfers
         transfers = retrieveTransfers(
-            chain, fb, tb,
+            "xdai" if chainId == 100 else chain, fb, tb,
             SUPPORTED_CHAIN_IDS, SUPPORTED_TOKENS,
             npages=999, verbose=True
         )

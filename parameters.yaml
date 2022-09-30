@@ -115,9 +115,6 @@ bridgoor:
       # The upper bound of volume that counts for score
       ub: 5_000_000
 
-    # min bridge size (in USD) to be included in the airdrop
-    usd_cutoff: 250.0
-
     # Total rewards shared between bridgoors
     total_rewards: 15_000_000
 
@@ -155,6 +152,9 @@ lp:
 # should qualify for the "pre-drop" -- After they qualify, they still need
 # to accomplish their pre-determined Across tasks
 traveler:
+  chains: ["mainnet", "optimism", "polygon", "boba", "arbitrum"]
+  tokens: ["DAI", "USDC", "USDT", "ETH", "WETH", "WBTC"]
+
   n_blocks:
     1: 25_000
     10: 100_000
@@ -165,7 +165,7 @@ traveler:
   # Cbridge
   cbridge:
     chains: ["mainnet", "optimism", "polygon", "arbitrum"]
-    tokens: ["DAI", "USDC", "ETH", "WETH"]
+    tokens: ["DAI", "USDC", "USDT", "ETH", "WETH"]
 
     contract_info:
       1:
@@ -187,8 +187,8 @@ traveler:
 
   # Hop parameters
   hop:
-    chains: ["mainnet", "optimism", "xdai", "polygon", "arbitrum"]
-    tokens: ["DAI", "USDC", "ETH", "WETH"]
+    chains: ["mainnet", "optimism", "gnosis", "polygon", "arbitrum"]
+    tokens: ["DAI", "USDC", "USDT", "ETH", "WETH"]
     first_block:  # 2022-01-01T00:00
       1: 13_916_166
       10: 1_806_122
