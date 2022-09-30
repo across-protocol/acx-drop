@@ -157,11 +157,7 @@ def submit_single_query(table, variables, arguments, organization, subgraph):
     res = session.post(queryable_url, json=query_json)
 
     if "errors" in res.json().keys():
-        print("Error")
-        print(queryable_url)
-        print(query_json["query"])
-        print(res)
-        print("-------------")
+        print(f"""Error\n{queryable_url}\n{query_json["query"]}\n{res}""")
         raise ValueError("Failed to get data")
 
     return res
@@ -216,25 +212,12 @@ def submit_query_iterate(
             print(last_id)
             print(f"Retrieving {limit*page + 1} to {limit*(page+1)}")
 
-        # Try requesting twice in case of failure
-        try:
-            res = submit_single_query(
-                table, variables, arguments, organization, subgraph
-            )
-            _out = res.json()["data"][table]
-            if len(_out) > 0:
-                last_id = _out[-1]["id"]
-        except:
-            print("Failed")
-            print(res.text)
-            time.sleep(0.5)
-
-            res = submit_single_query(
-                table, variables, arguments, organization, subgraph
-            )
-            _out = res.json()["data"][table]
-            if len(_out) > 0:
-                last_id = _out[-1]["id"]
+        res = submit_single_query(
+            table, variables, arguments, organization, subgraph
+        )
+        _out = res.json()["data"][table]
+        if len(_out) > 0:
+            last_id = _out[-1]["id"]
 
         # Add new value to list of all output
         out.extend(_out)
