@@ -79,8 +79,8 @@ if __name__ == "__main__":
     params = parse_config("parameters.yaml")
 
     # Chains/Tokens to support
-    SUPPORTED_CHAINS = params["traveler"]["cbridge"]["chains"]
-    SUPPORTED_TOKENS = params["traveler"]["cbridge"]["tokens"]
+    SUPPORTED_CHAINS = params["traveler"]["synapse"]["chains"]
+    SUPPORTED_TOKENS = params["traveler"]["synapse"]["tokens"]
     contractInfo = params["traveler"]["synapse"]["contract_info"]
 
     synapseInflows = []
