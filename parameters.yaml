@@ -282,6 +282,10 @@ traveler:
       # The upper bound of volume that counts for score
       ub: 500_000
 
+    rewards:
+      tokens_lb = 10_000_000
+      tokens_ub = 20_000_000
+
 misc:
   # Block data
   block_start_ts_mainnet: 1636329600  # 2021-11-08T00:00
