@@ -6,36 +6,35 @@ import pandas as pd
 from pyaml_env import parse_config
 
 
-# Load block data
-BLOCKSTODATE = (
-    pd.read_json("raw/blocks.json", orient="records")
-    .query("chainId == 1")
-    .sort_values("block")
-    .loc[:, ["block", "date"]]
-)
-BLOCKS = BLOCKSTODATE["block"].to_numpy()
-DATES = BLOCKSTODATE["date"].to_numpy()
-
-
-def blockToDate(block):
-    """
-    Given a block, use `BLOCKS` and `DATES` to map the block
-    to a particular date
-    """
-    idx = np.searchsorted(BLOCKS, block, side="right") - 1
-
-    return DATES[idx]
-
 
 if __name__ == "__main__":
+    #
     # Load parameters
+    #
     params = parse_config("parameters.yaml")
 
-    # Load exchange rate data (TODO)
-    # exchangeRates = (
-    #     pd.read_json("raw/exchange_rates.json", orient="records")
-    #     .set_index(["block", "token"])
-    # )
+    # Block start and end information
+    v1StartBlock = params["lp"]["v1_start_block"]
+    v1EndBlock = params["lp"]["v1_end_block"]
+    v2StartBlock = params["lp"]["v2_start_block"]
+    v2EndBlock = params["lp"]["v2_end_block"]
+
+    # Compute rewards per block
+    nBlocks = (v2EndBlock - v2StartBlock) + (v1EndBlock - v1StartBlock)
+    totalRewards = params["lp"]["parameters"]["total_rewards"]
+    rewardPerBlock = totalRewards / nBlocks
+
+    #
+    # Load data
+    #
+
+    # Load block data
+    BLOCKSTODATE = (
+        pd.read_json("raw/blocks.json", orient="records")
+        .query("chainId == 1")
+        .sort_values("block")
+        .loc[:, ["block", "date"]]
+       )
 
     # Load prices data
     prices = (
@@ -43,58 +42,118 @@ if __name__ == "__main__":
         .set_index(["date", "symbol"])
     )
 
-    # Load all positions an LP had at each relevant block --
-    # `v?CumulativeLP.parquet` already restricts to only blocks of interest
-    v1StartBlock = params["lp"]["v1_start_block"]
-    v1EndBlock = params["lp"]["v2_end_block"]
-    v2StartBlock = params["lp"]["v2_start_block"]
-    v2EndBlock = params["lp"]["v2_end_block"]
-    lpPositions = pd.concat(
-        [
-            pd.read_parquet("intermediate/v1CumulativeLp.parquet"),
-            pd.read_parquet("intermediate/v2CumulativeLp.parquet")
-        ], axis=0, ignore_index=False
+    # Load all positions an LP had at each relevant block
+    v1LpPositions = pd.read_parquet("intermediate/v1CumulativeLp.parquet")
+    v2LpPositions = pd.read_parquet("intermediate/v2CumulativeLp.parquet")
+    for lpDf in [v1LpPositions, v2LpPositions]:
+        lpDf.columns = lpDf.columns.set_names(["symbol", "lp"])
+
+    # Create a list of all LPs - The LPs should all be in both datasets
+    # but, if not, this makes sure that they are included
+    lps = list(
+        set(v1LpPositions.columns.get_level_values("lp").unique())
+        .union(v2LpPositions.columns.get_level_values("lp").unique())
     )
-    lpPositions.columns = lpPositions.columns.set_names(["symbol", "lp"])
-    lps = lpPositions.columns.get_level_values("lp").unique()
 
-    # Compute rewards per block
-    nBlocks = (v2EndBlock - v2StartBlock) + (v1EndBlock - v1StartBlock)
-    totalRewards = params["lp"]["parameters"]["total_rewards"]
-    rewardPerBlock = totalRewards / nBlocks
+    # Allocate space to save/update results
+    addressRewards = pd.Series(np.zeros_like(lps, dtype=float), index=lps)
 
-    # Iterate through all blocks of interest
-    addressRewards = pd.Series(np.zeros_like(lps), index=lps)
-    blocks = list(range(v1StartBlock, v1EndBlock)) + list(range(v2StartBlock, v2EndBlock))
-    for block in blocks:
-        if block % 100 == 0:
-            print(f"Currently working on {block}")
+    # Separate v1 and v2 rewards
+    for version in ["v1", "v2"]:
+        # Depending on version get different subset of data
+        if version == "v1":
+            startBlock = v1StartBlock
+            endBlock = v1EndBlock
+            df = v1LpPositions.loc[startBlock:endBlock, :].sort_index()
+            exchangeRates = pd.read_json("raw/v1ExchangeRates.json", orient="records")
+        else:
+            startBlock = v2StartBlock
+            endBlock = v2EndBlock
+            df = v2LpPositions.loc[startBlock:endBlock, :].sort_index()
+            exchangeRates = pd.read_json("raw/v2ExchangeRates.json", orient="records")
 
-        # Get the corresponding element of the cumulative LP positions
-        # so that we can compute their relative positions
-        lpIdx = lpPositions.index.searchsorted(block, side="right") - 1
-        idxBlock = lpPositions.index[lpIdx]
+        startIdx = BLOCKSTODATE["block"].searchsorted(startBlock, side="right") - 1
+        endIdx = BLOCKSTODATE["block"].searchsorted(endBlock, side="right") - 1
 
-        # Find date that corresponded to that block so we can include prices
-        date = blockToDate(block)
+        _datetoblock = BLOCKSTODATE.loc[startIdx:endIdx, :]
 
-        positions = (
-            lpPositions
-            .iloc[lpIdx, :]
-            .reset_index()
-            .merge(prices.loc[date, :], left_on="symbol", right_index=True)
-            .rename(columns={idxBlock: "amount"})
-        )
+        # Date-by-date iteration so that the data we are working with is always
+        # "small enough"
+        for (idx, block_date) in _datetoblock.iterrows():
+            # Extract date from _datetoblock
+            date = block_date["date"]
+            dailyBlockStart = block_date["block"]
+            print(f"Working on {date}")
 
-        # TODO: This is still missing exchange rate.
-        positions["amountUSD"] = positions.eval("amount * price")
+            # Get daily price/exchange rate information
+            dailyPrices = (
+                prices.query("date == @date")
+                .droplevel("date")
+            )
+            dailyERs = (
+                exchangeRates.query("date == @date")
+                .loc[:, ["symbol", "exchangeRate"]]
+                .set_index("symbol")
+            )
 
-        # Compute pro-rata shares
-        proRata = (
-            positions.groupby("lp")["amountUSD"].sum() /
-            positions["amountUSD"].sum()
-        )
-        addressRewards += proRata * rewardPerBlock
+            # Convert price/exchange rate into a multiplier for each lp
+            # token position
+            dailyMultiplier = (
+                dailyPrices.merge(
+                    dailyERs, left_index=True, right_index=True,
+                    how="right"
+                )
+                .assign(
+                    multiplier=lambda x: x["price"] * x["exchangeRate"],
+                )
+                .loc[:, "multiplier"]
+            )
+
+            # Determine which block number to stop tracking at
+            if (idx + 1) in _datetoblock.index:
+                dailyBlockEnd = min(_datetoblock.at[idx+1, "block"], endBlock)
+            else:
+                dailyBlockEnd = endBlock
+
+            # Create re-indexed data with all blocks for the day
+            dailyDf = df.reindex(index=np.arange(dailyBlockStart, dailyBlockEnd))
+
+            # Find the last position prior to today's positions and, if there's
+            # data in the first block of the day, add that as the first block
+            # values
+            positionIdx = df.index.searchsorted(dailyBlockStart, side="right")
+            lastBlockWPosition = df.index[positionIdx]
+            if lastBlockWPosition != dailyBlockStart:
+                dailyDf.loc[dailyBlockStart, :] = df.loc[lastBlockWPosition, :]
+
+            # Fill all missing blocks with the previous data -- We know
+            # there's at least one in the day because we manually included
+            # it above
+            dailyDf = dailyDf.ffill()
+
+            # Create a `nColumns` length array with all of the corresponding
+            # multipliers for each column (i.e repeated multipliers based on
+            # which symbol the column corresponds to)
+            _multiplier = (
+                dailyMultiplier.loc[dailyDf.columns.get_level_values("symbol")]
+                .to_numpy()
+            )
+
+            # Multiply positions by the multiplier (i.e. exchange rate * price * bonus)
+            dailyDf = dailyDf * _multiplier
+            usdTotals = dailyDf.sum(axis=1)
+            proRata = dailyDf.divide(usdTotals, axis=0)
+
+            # Compute rewards
+            dailyRewards = (
+                (proRata * rewardPerBlock)
+                .sum(axis=0)
+                .unstack(level="symbol")
+                .sum(axis=1)
+            )
+
+            # Add to running total
+            addressRewards += dailyRewards
 
     with open("final/lp_rewards.json", "w") as f:
         json.dump(addressRewards.to_dict(), f)

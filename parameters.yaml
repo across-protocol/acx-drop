@@ -130,7 +130,7 @@ lp:
   # v1 start block picked by the v1 launch on 2021-11-08T14:00+00:00
   v1_start_block: 13576190
   # v1 end block picked by the v2 launch on 2022-05-24T14:00+00:00
-  v1_end_block: 14836162
+  v1_end_block: 14836161
 
   # v2 launch block picked by the v2 launch on 2022-05-24T14:00+00:00
   v2_start_block: 14836162
