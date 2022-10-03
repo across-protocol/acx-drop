@@ -61,7 +61,7 @@ if __name__ == "__main__":
 
     # Find relevant blocks for all chains
     blockData = []
-    for chain in params["bridgoor"]["chains"]:
+    for chain in params["misc"]["block"]["chains"]:
         print(f"Starting on chain: {chain}")
 
         # Get chain id and scan api key
@@ -71,13 +71,13 @@ if __name__ == "__main__":
 
         # Get timestamps to start searching for
         if chain == "mainnet":
-            blockStartTs = params["misc"]["block_start_ts_mainnet"]
+            blockStartTs = params["misc"]["block"]["start_ts_mainnet"]
         else:
-            blockStartTs = params["misc"]["block_start_ts_nonmainnet"]
-        blockEndTs = params["misc"]["block_end_ts"]
+            blockStartTs = params["misc"]["block"]["start_ts_nonmainnet"]
+        blockEndTs = params["misc"]["block"]["end_ts"]
 
         # Get the block number for each day between (blockStartTs, blockEndTs)
-        dateStarts = range(blockStartTs, blockEndTs, 24*60*60)
+        dateStarts = range(blockStartTs, blockEndTs+1, 24*60*60)
         for _ts in dateStarts:
             # Optimism - June 1, 2022
             if (_ts == 1654041600) and (chain == "optimism"):
