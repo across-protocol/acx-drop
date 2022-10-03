@@ -1,6 +1,7 @@
 import datetime as dt
 import pandas as pd
-import yaml
+
+from pyaml_env import parse_config
 
 from acx.data.tokens import SYMBOL_TO_CGID
 from acx.utils import getWithRetries
@@ -30,14 +31,13 @@ def getCoinPriceHistory(_id, startDate, endDate):
 
 if __name__ == "__main__":
     # Load parameters
-    with open("parameters.yaml", "r") as f:
-        params = yaml.load(f, yaml.Loader)
+    params = parse_config("parameters.yaml")
 
     # Tokens that we want data for
-    tokens = params["misc"]["price_tokens"]
+    tokens = params["misc"]["price"]["tokens"]
 
-    startDate = dt.datetime.utcfromtimestamp(params["misc"]["price_start_ts"])
-    endDate = dt.datetime.utcfromtimestamp(params["misc"]["price_end_ts"])
+    startDate = dt.datetime.utcfromtimestamp(params["misc"]["price"]["start_ts"])
+    endDate = dt.datetime.utcfromtimestamp(params["misc"]["price"]["end_ts"])
 
     dfs = []
     for token in tokens:
