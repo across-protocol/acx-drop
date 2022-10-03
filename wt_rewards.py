@@ -45,6 +45,12 @@ if __name__ == "__main__":
     # Filter out any users that have used Across already
     df = df.query("traveler not in @acrossAddresses")
 
+    # Load Across LPs
+    acrossLps = pd.read_json("final/lp_rewards.json", typ="series").index
+
+    # Filter out any users that have LP'd for Across
+    df = df.query("traveler not in @acrossLps")
+
     # Filter out users who have been identified as sybil
     with open("raw/sybil.json", "r") as f:
         sybils = json.loads(f.read())
