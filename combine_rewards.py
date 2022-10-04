@@ -25,5 +25,5 @@ out = (
 out["total"] = out.sum(axis=1)
 out.index.name = "address"
 
-out.to_json("final_combined_index.json", orient="index")
-out.reset_index().to_json("final_combined_records.json", orient="records")
+out.to_json("final/final_combined.json", orient="index")
+out.to_csv("final/final_combined.csv")
