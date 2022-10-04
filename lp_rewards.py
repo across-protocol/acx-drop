@@ -63,12 +63,12 @@ if __name__ == "__main__":
         if version == "v1":
             startBlock = v1StartBlock
             endBlock = v1EndBlock
-            df = v1LpPositions.loc[startBlock:endBlock, :].sort_index()
+            df = v1LpPositions.sort_index()
             exchangeRates = pd.read_json("raw/v1ExchangeRates.json", orient="records")
         else:
             startBlock = v2StartBlock
             endBlock = v2EndBlock
-            df = v2LpPositions.loc[startBlock:endBlock, :].sort_index()
+            df = v2LpPositions.sort_index()
             exchangeRates = pd.read_json("raw/v2ExchangeRates.json", orient="records")
 
         startIdx = BLOCKSTODATE["block"].searchsorted(startBlock, side="right") - 1
@@ -116,7 +116,7 @@ if __name__ == "__main__":
 
             # Break if the start and end block are the same
             if dailyBlockStart == dailyBlockEnd:
-                break
+                continue
 
             # Create re-indexed data with all blocks for the day -- Columns are
             # given by (symbol, LP address) and index is given by block number
@@ -168,7 +168,7 @@ if __name__ == "__main__":
             addressRewards += dailyRewards
 
     # Round small rewards to 1 ACX
-    addressRewards = addressRewards.clip(lower=1)
+    addressRewardsClipped = addressRewards.clip(lower=1)
 
     with open("final/lp_rewards.json", "w") as f:
-        json.dump(addressRewards.to_dict(), f)
+        json.dump(addressRewardsClipped.to_dict(), f)
