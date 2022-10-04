@@ -171,19 +171,19 @@ traveler:
       1:
         address: "0x5427FEFA711Eff984124bFBB1AB6fbf5E3DA1820"
         first_block: 13_916_166  # 2022-01-01T00:00
-        last_block: 15_487_072  # 2022-09-07T00:00
+        last_block: 15_449_618  # 2022-09-01T00:00
       10:
         address: "0x9D39Fc627A6d9d9F8C831c16995b209548cc3401"
         first_block: 1_806_122  # 2022-01-01T00:00
-        last_block: 15_487_072  # 2022-09-07T00:00
+        last_block: 21_406_456  # 2022-09-01T00:00
       137:
         address: "0x88DCDC47D2f83a99CF0000FDF667A468bB958a78"
         first_block: 23_201_014  # 2022-01-01T00:00
-        last_block: 32_782_790  # 2022-09-07T00:00
+        last_block: 32_534_499  # 2022-09-01T00:00
       42161:
         address: "0x1619DE6B6B20eD217a58d00f37B9d47C7663feca"
         first_block: 4_221_290  # 2022-01-01T00:00
-        last_block: 23_258_470  # 2022-09-07T00:00
+        last_block: 22_253_579  # 2022-09-01T00:00
 
   # Hop parameters
   hop:
@@ -195,12 +195,12 @@ traveler:
       100: 19_872_632
       137: 23_201_014
       42161: 4_221_290
-    last_block:  # 2022-09-07T00:00
-      1: 15_487_072
-      10: 22_207_314
-      100: 24_071_518
-      137: 32_782_790
-      42161: 23_258_470
+    last_block:  # 2022-09-01T00:00
+      1: 15_449_618
+      10: 21_406_456
+      100: 23_980_828
+      137: 32_534_499
+      42161: 22_253_579
 
   # Stargate parameters
   stg:
@@ -211,34 +211,34 @@ traveler:
         SGETH:
           address: "0x101816545F6bd2b1076434B54383a1E633390A2E"
           first_block: 15_035_701  # 2022-06-27T18:32 (deployment block)
-          last_block: 15_487_072  # 2022-09-07T00:00
+          last_block: 15_449_618  # 2022-09-01T00:00
         USDC:
           address: "0xdf0770dF86a8034b3EFEf0A1Bb3c889B8332FF56"
           first_block: 14_403_393  # 2022-03-17T10:08 (deployment block)
-          last_block: 15_487_072  # 2022-09-07T00:00
+          last_block: 15_449_618  # 2022-09-01T00:00
       10:
         SGETH:
           address: "0xd22363e3762cA7339569F3d33EADe20127D5F98C"
           first_block: 13_332_734  # 2022-06-27T18:23 (deployment block)
-          last_block: 22_207_314  # 2022-09-07T00:00
+          last_block: 21_406_456  # 2022-09-01T00:00
         USDC:
           address: "0xDecC0c09c3B5f6e92EF4184125D5648a66E35298"
           first_block: 4_535_509  # 2022-03-17T07:52 (deployment block)
-          last_block: 22_207_314  # 2022-09-07T00:00
+          last_block: 21_406_456  # 2022-09-01T00:00
       137:
         USDC:
           address: "0x1205f31718499dBf1fCa446663B532Ef87481fe1"
           first_block: 26_032_726  # 2022-03-17T08:05 (deployment block)
-          last_block: 32_782_790  # 2022-09-07T00:00
+          last_block: 32_534_499  # 2022-09-01T00:00
       42161:
         SGETH:
           address: "0x915A55e36A01285A14f05dE6e81ED9cE89772f8e"
           first_block: 16_112_680  # 2022-06-27T18:24 (deployment block)
-          last_block: 23_258_470  # 2022-09-07T00:00
+          last_block: 22_535_579  # 2022-09-01T00:00
         USDC:
           address: "0x892785f33CdeE22A30AEF750F285E18c18040c3e"
           first_block: 8_041_115  # 2022-03-17T07:51 (deployment block)
-          last_block: 23_258_470  # 2022-09-07T00:00
+          last_block: 22_535_579  # 2022-09-01T00:00
 
   # Synapse parameters
   synapse:
@@ -249,23 +249,23 @@ traveler:
       1:
         address: "0x2796317b0fF8538F253012862c06787Adfb8cEb6"
         first_block: 13_916_166  # 2022-01-01T00:00
-        last_block: 15_487_072  # 2022-09-07T00:00
+        last_block: 15_449_618  # 2022-09-01T00:00
       10:
         address: "0xAf41a65F786339e7911F4acDAD6BD49426F2Dc6b"
         first_block: 1_806_122  # 2022-01-01T00:00
-        last_block: 15_487_072  # 2022-09-07T00:00
+        last_block: 21_406_456  # 2022-09-01T00:00
       137:
         address: "0x8F5BBB2BB8c2Ee94639E55d5F41de9b4839C1280"
         first_block: 23_201_014  # 2022-01-01T00:00
-        last_block: 32_782_790  # 2022-09-07T00:00
+        last_block: 32_534_499  # 2022-09-01T00:00
       288:
         address: "0x432036208d2717394d2614d6697c46DF3Ed69540"
         first_block: 271_550  # 2022-01-01T00:00
-        last_block: 801_965  # 2022-09-07T00:00
+        last_block: 731_786  # 2022-09-01T00:00
       42161:
         address: "0x6F4e8eBa4D337f874Ab57478AcC2Cb5BACdc19c9"
         first_block: 4_221_290  # 2022-01-01T00:00
-        last_block: 23_258_470  # 2022-09-07T00:00
+        last_block: 22_253_579  # 2022-09-01T00:00
 
   parameters:
     inclusion:
