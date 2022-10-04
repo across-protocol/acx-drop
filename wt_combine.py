@@ -110,4 +110,4 @@ if __name__ == "__main__":
         }
     )
 
-    df.to_parquet("intermediate/travelerTransfers.parquet")
+    df.sort_values("date").to_parquet("intermediate/travelerTransfers.parquet")
