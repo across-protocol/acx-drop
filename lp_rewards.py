@@ -6,7 +6,6 @@ import pandas as pd
 from pyaml_env import parse_config
 
 
-
 if __name__ == "__main__":
     #
     # Load parameters
@@ -82,7 +81,7 @@ if __name__ == "__main__":
         for (idx, block_date) in _datetoblock.iterrows():
             # Extract date from _datetoblock
             date = block_date["date"]
-            dailyBlockStart = block_date["block"]
+            dailyBlockStart = max(startBlock, block_date["block"])
             print(f"Working on {date}")
 
             # Get daily price/exchange rate information
@@ -115,7 +114,12 @@ if __name__ == "__main__":
             else:
                 dailyBlockEnd = endBlock
 
-            # Create re-indexed data with all blocks for the day
+            # Break if the start and end block are the same
+            if dailyBlockStart == dailyBlockEnd:
+                break
+
+            # Create re-indexed data with all blocks for the day -- Columns are
+            # given by (symbol, LP address) and index is given by block number
             dailyDf = df.reindex(index=np.arange(dailyBlockStart, dailyBlockEnd))
 
             # Find the last position prior to today's positions and, if there's
@@ -146,14 +150,25 @@ if __name__ == "__main__":
 
             # Compute rewards
             dailyRewards = (
+                # Convert fraction of pool -> rewards
+                # blocks x (symbol, address)
                 (proRata * rewardPerBlock)
+                # Sum all rewards for each column
+                # (symbol, address) x 1
                 .sum(axis=0)
+                # Move symbol to columns
+                # address x symbol
                 .unstack(level="symbol")
+                # Sum all of the rewards for each LP
+                # address x 1
                 .sum(axis=1)
             )
 
             # Add to running total
             addressRewards += dailyRewards
+
+    # Round small rewards to 1 ACX
+    addressRewards = addressRewards.clip(lower=1)
 
     with open("final/lp_rewards.json", "w") as f:
         json.dump(addressRewards.to_dict(), f)
