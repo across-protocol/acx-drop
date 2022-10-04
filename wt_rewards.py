@@ -82,4 +82,4 @@ if __name__ == "__main__":
 
     # Save output
     travelers = travelers.sort_values("totalVolume", ascending=False)
-    travelers["score"].to_json("final/traveler_rewards.json")
+    (100 * travelers["score"]).to_json("final/traveler_rewards.json")
