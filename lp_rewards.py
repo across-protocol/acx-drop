@@ -42,6 +42,9 @@ def computeLpRewards(
         The rewards an LP will receive -- Original + rewards from
         `startBlock` to `endBlock`
     """
+    # df has multi-level columns with (symbol, lp address) as
+    # the two levels -- This extracts the unique lp addresses from
+    # that multi-level
     lps = df.columns.get_level_values("lp").unique()
     out = pd.Series(np.zeros_like(lps, dtype=float), index=lps)
 
@@ -93,7 +96,9 @@ def computeLpRewards(
         else:
             dailyBlockEnd = endBlock
 
-        # Break if the start and end block are the same
+        # Make sure not to set the block to be the first block of a day --
+        # Rather, you should use the last block of the previous day. If it is
+        # the first block of a day then it creates a size 0 dataframe
         if dailyBlockStart == dailyBlockEnd:
             continue
 
