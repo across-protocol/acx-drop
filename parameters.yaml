@@ -21,52 +21,52 @@ across:
       bridge:
         DAI:
           address: "0x43f133FE6fDFA17c417695c476447dc2a449Ba5B"
-          first_block: 14302709
+          first_block: 14_302_709
         USDC:
           address: "0x256C8919CE1AB0e33974CF6AA9c71561Ef3017b6"
-          first_block: 13545487
+          first_block: 13_545_487
         WBTC:
           address: "0x02fbb64517E1c6ED69a6FAa3ABf37Db0482f1152"
-          first_block: 13996048
+          first_block: 13_996_048
         WETH:
           address: "0x7355Efc63Ae731f584380a9838292c7046c1e433"
-          first_block: 13545377
+          first_block: 13_545_377
     optimism:
       deposit_box:
         address: "0x3baD7AD0728f9917d1Bf08af5782dCbD516cDd96"
-        first_block: 204576
+        first_block: 204_576
     boba:
       deposit_box:
         address: "0xCD43CEa89DF8fE39031C03c24BC24480e942470B"
-        first_block: 223808
+        first_block: 223_808
     arbitrum:
       deposit_box:
         address: "0xD8c6dD978a3768F7DDfE3A9aAD2c3Fd75Fa9B6Fd"
-        first_block: 2811998
+        first_block: 2_811_998
   v2:
     mainnet:
       hub:
         address: "0xc186fA914353c44b2E33eBE05f21846F1048bEda"
-        first_block: 14819537
+        first_block: 14_819_537
       spoke:
         address: "0x4D9079Bb4165aeb4084c526a32695dCfd2F77381"
-        first_block: 14819486
+        first_block: 14_819_486
     optimism:
       spoke:
         address: "0xa420b2d1c0841415A695b81E5B867BCD07Dff8C9"
-        first_block: 8747136
+        first_block: 8_747_136
     polygon:
       spoke:
         address: "0x69B5c72837769eF1e7C164Abc6515DcFf217F920"
-        first_block: 28604263
+        first_block: 28_604_263
     boba:
       spoke:
         address: "0xBbc6009fEfFc27ce705322832Cb2068F8C1e0A58"
-        first_block: 619993
+        first_block: 619_993
     arbitrum:
       spoke:
         address: "0xB88690461dDbaB6f04Dfad7df66B7725942FEb9C"
-        first_block: 12741972
+        first_block: 12_741_972
 
 # `bridgoor` parameters correspond to specifications on how bridge users
 # are included in the airdrop
@@ -83,21 +83,21 @@ bridgoor:
   chains: ["mainnet", "optimism", "polygon", "boba", "arbitrum"]
   tokens: ["DAI", "USDC", "WBTC", "WETH"]
 
-  v1_start_block: 13576190  # 2021-11-08T14:00+00:00
-  v1_end_block: 14987809  # 2022-06-19T00:00+00:00
+  v1_start_block: 13_576_190  # 2021-11-08T14:00+00:00
+  v1_end_block: 14_987_809  # 2022-06-19T00:00+00:00
 
   v2_start_block:  # 2022-05-24T14:00+00:00
-    1: 14836162
-    10: 8915780
-    137: 28714237
-    288: 622100
-    42161: 12862573
+    1: 14_836_162
+    10: 8_915_780
+    137: 28_714_237
+    288: 622_100
+    42161: 12_862_573
   v2_end_block:  # 2022-07-19T00:00+00:00
-    1: 15169695
-    10: 14924065
-    137: 30878164
-    288: 731786
-    42161: 17963566
+    1: 15_169_695
+    10: 14_924_065
+    137: 30_878_164
+    288: 731_786
+    42161: 17_963_566
 
   # Shared parameters
   parameters:
@@ -128,25 +128,32 @@ lp:
   tokens: ["DAI", "USDC", "WBTC", "WETH"]
 
   # v1 start block picked by the v1 launch on 2021-11-08T14:00+00:00
-  v1_start_block: 13576190
-  # v1 end block picked by the v2 launch on 2022-05-24T14:00+00:00
-  v1_end_block: 14836162
+  v1_start_block: 13_576_190
+  # v1 end block picked by the v2 launch from 2022-05-24T14:00+00:00
+  v1_end_block: 14_836_161
 
   # v2 launch block picked by the v2 launch on 2022-05-24T14:00+00:00
-  v2_start_block: 14836162
-  # v2 end block is (for now) arbitrarily specified on 2022-09-07T00:00+00:00
-  v2_end_block: 15487072
+  v2_start_block: 14_836_162
+  # v2 end block is 2022-09-30T23:59:59+00:00
+  v2_end_block: 15_649_594
 
   v2_lp_token_creation_block:
-    DAI: 14828021
-    USDC: 14824012
-    WBTC: 14824012
-    WETH: 14823998
+    DAI: 14_828_021
+    USDC: 14_824_012
+    WBTC: 14_824_012
+    WETH: 14_823_998
+
+  v2_lp_token_creation_block:
+    DAI: 14_828_021
+    USDC: 14_824_012
+    WBTC: 14_824_012
+    WETH: 14_823_998
 
   # Shared parameters
   parameters:
     # Total rewards shared between LPs
-    total_rewards: 65_000_000
+    total_rewards: 70_000_000
+
 
 # `traveler` parameters correspond to specifications on which "bridge travelers"
 # should qualify for the "pre-drop" -- After they qualify, they still need
@@ -292,10 +299,10 @@ misc:
     chains: ["mainnet", "optimism", "polygon", "boba", "arbitrum"]
     start_ts_mainnet: 1636329600  # 2021-11-08T00:00
     start_ts_nonmainnet: 1640995200  # 2022-01-01T00:00
-    end_ts: 1662595200  # 2022-09-08T00:00
+    end_ts: 1664582400  # 2022-10-01T00:00
 
   # Price data
   price:
     start_ts: 1609459200  # 2021-01-01T00:00
-    end_ts: 1662595200  # 2022-09-08T00:00
+    end_ts: 1664582400  # 2022-10-01T00:00
     tokens: ["DAI", "ETH", "USDC", "WBTC", "WETH"]

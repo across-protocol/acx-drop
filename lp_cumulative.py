@@ -86,6 +86,5 @@ if __name__ == "__main__":
             .reindex(columns=newIndex, fill_value=0.0)
             .sort_index()
             .cumsum()
-            .loc[startBlock:endBlock, :]
         )
         data.to_parquet(f"intermediate/v{version}CumulativeLp.parquet")
