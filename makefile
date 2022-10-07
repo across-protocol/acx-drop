@@ -16,8 +16,10 @@ all: blocks exchangerates prices bridgoor lp traveler
 	python combine_rewards.py
 
 clean:
-	rm -rf raw
+	cp raw/sybil.json sybil.json
+	rm -rf raw/
 	mkdir raw
+	mv sybil.json raw/sybil.json
 	rm -rf intermediate
 	mkdir intermediate
 	rm -rf final
@@ -77,13 +79,13 @@ traveler: blocks prices bridgoor lp
 
 ifeq ($(TRAVELER_FROM_SCRATCH),true)
 	@echo "Recompiling all bridgoor events"
-	python wt_cbridge.py
-	python wt_hop.py
-	python wt_stargate.py
-	python wt_synapse.py
+	python bt_cbridge.py
+	python bt_hop.py
+	python bt_stargate.py
+	python bt_synapse.py
 endif
 
-	python wt_combine.py
-	python wt_rewards.py
+	python bt_combine.py
+	python bt_rewards.py
 
 # end
