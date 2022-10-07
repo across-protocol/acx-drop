@@ -17,9 +17,9 @@ if lp["lp"].isna().any():
 
 travelers = pd.DataFrame(
     pd.read_json("final/traveler_rewards.json", typ="series"),
-    columns=["traveler"]
+    columns=["bridge-traveler"]
 )
-if travelers["traveler"].isna().any():
+if travelers["bridge-traveler"].isna().any():
     raise ValueError("Missing values in traveler data")
 
 out = (
