@@ -50,7 +50,9 @@ if __name__ == "__main__":
     totalACX = params["bridgoor"]["parameters"]["total_rewards"]
 
     # Load bridge data
-    bridgeData = pd.read_json("intermediate/allBridges.json", orient="records")
+    bridgeData = pd.read_json(
+        "intermediate/bridgoorTransactions.json", orient="records"
+    )
     bridgeData["date"] = bridgeData.apply(determineDate, axis=1)
 
     # Load prices data
