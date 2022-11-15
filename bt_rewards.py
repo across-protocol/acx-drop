@@ -21,6 +21,9 @@ if __name__ == "__main__":
     power = params["traveler"]["parameters"]["score"]["power"]
     ub = params["traveler"]["parameters"]["score"]["ub"]
 
+    travelStartBlock = params["traveler"]["travel_start_block"]
+    travelEndBlock = params["traveler"]["travel_end_block"]
+
     # Read all transfers that occurred on other bridges
     df = pd.read_parquet("intermediate/travelerTransfers.parquet")
 
@@ -36,7 +39,7 @@ if __name__ == "__main__":
 
     # Load Across transfers
     acrossAddresses = (
-        pd.read_json("intermediate/allBridges.json", orient="records")
+        pd.read_json("intermediate/bridgoorTransactions.json", orient="records")
         ["recipient"]
         .unique()
     )
@@ -45,10 +48,26 @@ if __name__ == "__main__":
     # Filter out any users that have used Across already
     df = df.query("traveler not in @acrossAddresses")
 
-    # Load Across LPs
-    acrossLps = pd.read_json("final/lp_rewards.json", typ="series").index
+    # Load Across LPs -- Only look at pre-traveler LPs for exclusion
+    v1LpPositions = (
+        pd.read_parquet("intermediate/v1CumulativeLp.parquet")
+        .loc[:travelStartBlock[1], :]
+        .max()
+        > 1e-18
+    )
+    v2LpPositions = (
+        pd.read_parquet("intermediate/v2CumulativeLp.parquet")
+        .loc[:travelStartBlock[1], :]
+        .max()
+        > 1e-18
+    )
 
-    # Filter out any users that have LP'd for Across
+    acrossLps = list(
+        set(v1LpPositions.index[v1LpPositions].get_level_values(1).unique())
+        .union(v2LpPositions.index[v2LpPositions].get_level_values(1).unique())
+    )
+
+    # Filter out any users that have LP'd for Across (prior to BT)
     df = df.query("traveler not in @acrossLps")
 
     # Filter out users who have been identified as sybil
@@ -82,4 +101,4 @@ if __name__ == "__main__":
 
     # Save output
     travelers = travelers.sort_values("totalVolume", ascending=False)
-    (100 * travelers["score"]).to_json("final/traveler_rewards.json")
+    (100 * travelers["score"]).to_json("final/traveler_score.json")
