@@ -100,6 +100,10 @@ if __name__ == "__main__":
     v1Relays = unpackV1Relays(v1RelaysRaw, v1Disputes)
     v2Deposits = unpackV2Deposits(v2DepositsRaw)
 
+    # Save a history of all Across transactions for convenience
+    allAcross = pd.concat([v1Relays, v2Deposits], axis=0, ignore_index=True)
+    allAcross.to_json("intermediate/allAcrossTransactions.json", orient="records")
+
     # Restrict v1 to only relevant blocks
     v1StartBlock = params["bridgoor"]["v1_start_block"]
     v1EndBlock = params["bridgoor"]["v1_end_block"]
@@ -116,5 +120,6 @@ if __name__ == "__main__":
     v2DepositsKeep = v2Deposits.apply(v2Filter, axis=1)
     v2Deposits = v2Deposits.loc[v2DepositsKeep, :]
 
+    # Only save the bridgoor relevant transactions
     bridgoors = pd.concat([v1Relays, v2Deposits], axis=0, ignore_index=True)
-    bridgoors.to_json("intermediate/allBridges.json", orient="records")
+    bridgoors.to_json("intermediate/bridgoorTransactions.json", orient="records")
