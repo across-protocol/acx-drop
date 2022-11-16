@@ -309,6 +309,10 @@ traveler:
       bonus_threshold: 0.30
       clip_threshold: 25_000
 
+    qualification:
+      eth: 0.099
+      usdc: 149.99
+
 misc:
   # Block data
   block:

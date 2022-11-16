@@ -16,6 +16,10 @@ if __name__ == "__main__":
     bonusThreshold = params["traveler"]["parameters"]["rewards"]["bonus_threshold"]
     clipThreshold = params["traveler"]["parameters"]["rewards"]["clip_threshold"]
 
+    # Qualification parameters
+    ethQual = params["traveler"]["parameters"]["qualification"]["eth"]
+    usdcQual = params["traveler"]["parameters"]["qualification"]["usdc"]
+
     # Traveler blocks
     travelStartBlock = params["traveler"]["travel_start_block"]
     travelEndBlock = params["traveler"]["travel_end_block"]
@@ -42,12 +46,14 @@ if __name__ == "__main__":
             (x["block"] <= travelEndBlock[chainId])
         )
         travelerQuantity = (
-            (x["symbol"] == "WETH") & (x["amount"] > 0.099) |
-            (x["symbol"] == "USDC") & (x["amount"] > 149.99)
+            (x["symbol"] == "WETH") & (x["amount"] > ethQual) |
+            (x["symbol"] == "USDC") & (x["amount"] > usdcQual)
         )
         isTraveler = x["sender"] in travelers
 
         return travelerBlocks & travelerQuantity & isTraveler
+
+    # Apply filter
     travelerRelevant = across.apply(filterTravelerTransfers, axis=1)
     travelerTransfers = across.loc[travelerRelevant, :]
     completedTravelers = travelerTransfers["sender"].unique()
