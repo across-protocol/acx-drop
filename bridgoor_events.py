@@ -81,9 +81,11 @@ if __name__ == "__main__":
             for token in params["bridgoor"]["tokens"]
         ]
 
-        # Get start/end blocks for qualifying
+        # Get start block for qualifying
         v2StartBlock = params["bridgoor"]["v2_start_block"][chainId]
-        v2EndBlock = params["bridgoor"]["v2_end_block"][chainId]
+
+        # Collect data throughout end of BT (we'll need this for traveler)
+        v2EndBlock = params["traveler"]["travel_end_block"][chainId]
 
         # Retrieve deposits
         deposits = findEvents(
