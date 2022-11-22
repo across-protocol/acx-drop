@@ -21,6 +21,7 @@ if __name__ == "__main__":
     usdcQual = params["traveler"]["parameters"]["qualification"]["usdc"]
 
     # Traveler blocks
+    bridgoorStartBlock = params["bridgoor"]["v2_start_block"]
     travelStartBlock = params["traveler"]["travel_start_block"]
     travelEndBlock = params["traveler"]["travel_end_block"]
 
@@ -42,8 +43,9 @@ if __name__ == "__main__":
         chainId = x["originChain"]
 
         travelerBlocks = (
-            (x["block"] >= travelStartBlock[chainId]) &
-            (x["block"] <= travelEndBlock[chainId])
+            (x["block"] >= bridgoorStartBlock[chainId]) &
+            (x["block"] <= travelEndBlock[chainId]) &
+            (x["version"] == 2)
         )
         travelerQuantity = (
             (x["symbol"] == "WETH") & (x["amount"] > ethQual) |

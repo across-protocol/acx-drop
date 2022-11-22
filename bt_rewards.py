@@ -49,15 +49,16 @@ if __name__ == "__main__":
     df = df.query("traveler not in @acrossAddresses")
 
     # Load Across LPs -- Only look at pre-traveler LPs for exclusion
+    originalLpCutoff = 15_649_594
     v1LpPositions = (
         pd.read_parquet("intermediate/v1CumulativeLp.parquet")
-        .loc[:travelStartBlock[1], :]
+        .loc[:originalLpCutoff, :]
         .max()
         > 1e-18
     )
     v2LpPositions = (
         pd.read_parquet("intermediate/v2CumulativeLp.parquet")
-        .loc[:travelStartBlock[1], :]
+        .loc[:originalLpCutoff, :]
         .max()
         > 1e-18
     )
