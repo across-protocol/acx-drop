@@ -4,6 +4,7 @@ import json
 from decimal import Decimal
 
 import pandas as pd
+import web3
 
 
 bridgoor = pd.DataFrame(
@@ -39,9 +40,13 @@ out = (
     .fillna(0.0)
 )
 out.index.name = "address"
+out.index = out.index.map(lambda x: web3.Web3.toChecksumAddress(x))
+
+# Make sure no duplicates
+assert out.index.duplicated().sum() == 0
 
 # Convert everything to decimal types for more accurate/consistent computations
-out = out.applymap(lambda x: Decimal(x))
+out = out.applymap(lambda x: Decimal(x).quantize(Decimal("0.0000")))
 
 # Format for mr
 mrout = {}
