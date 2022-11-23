@@ -1,4 +1,7 @@
+import decimal
 import json
+
+from decimal import Decimal
 
 import pandas as pd
 
@@ -35,37 +38,54 @@ out = (
     )
     .fillna(0.0)
 )
-out["total"] = out.sum(axis=1)
 out.index.name = "address"
 
-out.to_json("final/final_combined.json", orient="index")
-out.to_csv("final/final_combined.csv")
+# Convert everything to decimal types for more accurate/consistent computations
+out = out.applymap(lambda x: Decimal(x))
 
 # Format for mr
 mrout = {}
-zeros = "0"*18
-
 mrout["recipients"] = []
-for (address, row) in out.iterrows():
-    entry = {
-        "account": address,
-        "amount": str(int(row["total"] * 1e18)),
-        "metadata": {
-            "amountBreakdown": {
-                "communityRewards":  str(int(row["community"] * 1e18)),
-                "welcomeTravelerRewards": str(int(row["bridge-traveler"] * 1e18)),
-                "earlyUserRewards": str(int(row["bridgoor"] * 1e18)),
-                "liquidityProviderRewards": str(int(row["lp"] * 1e18))
-            }
-        }
-    }
-    mrout["recipients"].append(entry)
 
 # Metadata
 mrout["chainId"] = 1
 mrout["rewardToken"] = ""
 mrout["windowIndex"] = 0
-mrout["rewardsToDeposit"] = str(int(out["total"].sum() * 1e18))
+
+
+# Constant 1e18 for convenience
+zeros = Decimal(1e18)
+runningSum = Decimal(0)
+
+# Iterate through rows and compute total and save to merkle tree object
+def removeDecimals(x):
+    return x.quantize(Decimal("0"))
+
+for (address, row) in out.iterrows():
+
+    # Add by hand because `.sum` converted to float
+    totalDecimal = row["bridge-traveler"] + row["bridgoor"] + row["community"] + row["lp"]
+    runningSum += totalDecimal*zeros
+    out.at[address, "total"] = totalDecimal
+
+    entry = {
+        "account": address,
+        "amount": str(removeDecimals(totalDecimal*zeros)),
+        "metadata": {
+            "amountBreakdown": {
+                "communityRewards":  str(removeDecimals(row["community"] * zeros)),
+                "welcomeTravelerRewards": str(removeDecimals(row["bridge-traveler"] * zeros)),
+                "earlyUserRewards": str(removeDecimals(row["bridgoor"] * zeros)),
+                "liquidityProviderRewards": str(removeDecimals(row["lp"] * zeros))
+            }
+        }
+    }
+    mrout["recipients"].append(entry)
+
+mrout["rewardsToDeposit"] = str(removeDecimals(runningSum))
+
+out.to_json("final/final_combined.json", orient="index")
+out.to_csv("final/final_combined.csv")
 
 with open("final/mr.json", "w") as f:
     json.dump(mrout, f)
