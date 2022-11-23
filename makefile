@@ -87,5 +87,6 @@ endif
 
 	python bt_combine.py
 	python bt_rewards.py
+	python bt_final.py
 
 # end

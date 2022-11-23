@@ -134,8 +134,8 @@ lp:
 
   # v2 launch block picked by the v2 launch on 2022-05-24T14:00+00:00
   v2_start_block: 14_836_162
-  # v2 end block is 2022-11-09T23:59:59+00:00
-  v2_end_block: 15_935_900
+  # v2 end block is 2022-11-22T00:00:00+00:00
+  v2_end_block: 16_021_829
 
   v2_lp_token_creation_block:
     DAI: 14_828_021
@@ -176,12 +176,12 @@ traveler:
     288: 835_877
     42161: 29_474_892
 
-  travel_end_block:  # 2022-11-09T14:15:00
-    1: 15_932_997
-    10: 36_331_819
-    137: 35_398_678
-    288: 872_641
-    42161: 36_635_671
+  travel_end_block:  # 2022-11-22T00:00:00
+    1: 16_021_829
+    10: 40_681_474
+    137: 35_904_127
+    288: 890_563
+    42161: 40_090_460
 
   # Cbridge
   cbridge:
@@ -310,8 +310,8 @@ traveler:
       clip_threshold: 25_000
 
     qualification:
-      eth: 0.099
-      usdc: 149.99
+      eth: 0
+      usdc: 0.0000025
 
 misc:
   # Block data
@@ -319,10 +319,10 @@ misc:
     chains: ["mainnet", "optimism", "polygon", "boba", "arbitrum"]
     start_ts_mainnet: 1636329600  # 2021-11-08T00:00
     start_ts_nonmainnet: 1640995200  # 2022-01-01T00:00
-    end_ts: 1668038400  # 2022-11-10T00:00
+    end_ts: 1669075200  # 2022-11-22T00:00
 
   # Price data
   price:
     start_ts: 1609459200  # 2021-01-01T00:00
-    end_ts: 1668038400  # 2022-11-10T00:00
+    end_ts: 1669075200  # 2022-11-22T00:00
     tokens: ["DAI", "ETH", "USDC", "WBTC", "WETH"]
