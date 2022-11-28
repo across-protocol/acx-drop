@@ -66,11 +66,6 @@ ifeq ($(LP_FROM_SCRATCH),true)
 	python lp_events.py
 endif
 
-ifeq ($(EXCHANGERATES_FROM_SCRATCH),true)
-	@echo "Recompiling all lp events"
-	python lp_exchange_rates.py
-endif
-
 	python lp_cumulative.py
 	python lp_rewards.py
 
